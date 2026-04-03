@@ -12,6 +12,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { controlApi } from '../services/api';
 
 /* ── Props ── */
@@ -57,10 +58,11 @@ const SaveIcon = (
 );
 
 export default function TakeControlPanel({ agentId, sessionId, onClose, onLastScreenshot }: Props) {
+    const { t } = useTranslation();
     const [screenshot, setScreenshot] = useState<string | null>(null);
     const [textInput, setTextInput] = useState('');
     const [locked, setLocked] = useState(false);
-    const [statusText, setStatusText] = useState('Acquiring control...');
+    const [statusText, setStatusText] = useState(t('takeControl.acquiringControl'));
     const [statusFlashKey, setStatusFlashKey] = useState(0);
     // Domain auto-populated from current page URL; user can still edit
     const [platformHint, setPlatformHint] = useState('');
@@ -89,7 +91,7 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
                 const res = await controlApi.lock(agentId, { session_id: sessionId });
                 if (mountedRef.current) {
                     setLocked(true);
-                    setStatusText('You are in control. Click or drag on the screenshot.');
+                    setStatusText(t('takeControl.inControl'));
 
                     // Auto-populate domain from the current active page URL
                     try {
@@ -106,7 +108,7 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
                 }
             } catch (e: any) {
                 if (mountedRef.current) {
-                    setStatusText(`Failed to acquire control: ${e.message}`);
+                    setStatusText(t('takeControl.failedToAcquireControl', { error: e.message }));
                 }
             }
         })();
@@ -210,7 +212,7 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
         const dy = e.clientY - dragOriginRef.current.screenY;
         if (!isDraggingRef.current && Math.hypot(dx, dy) > 5) {
             isDraggingRef.current = true;
-            flashStatus('Drag to release...');
+            flashStatus(t('takeControl.dragToRelease'));
         }
         if (isDraggingRef.current) {
             setDragEnd({ x: e.clientX, y: e.clientY });
@@ -228,7 +230,7 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
             // --- DRAG ---
             isDraggingRef.current = false;
             const to = mapToScreenCoords(e.clientX, e.clientY);
-            flashStatus(`Dragging (${origin.x},${origin.y}) -> (${to.x},${to.y})...`);
+            flashStatus(t('takeControl.dragging', { fromX: origin.x, fromY: origin.y, toX: to.x, toY: to.y }));
             try {
                 const res = await controlApi.drag(agentId, {
                     session_id: sessionId,
@@ -238,21 +240,21 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
                     to_y: to.y,
                 });
                 if (res.status === 'error') throw new Error(res.detail || 'Drag failed');
-                flashStatus(`Drag complete`);
+                flashStatus(t('takeControl.dragComplete'));
             } catch (err: any) {
-                flashStatus(`Drag failed: ${err.message}`);
+                flashStatus(t('takeControl.dragFailed', { error: err.message }));
             }
         } else {
             // --- CLICK (no significant movement) ---
             isDraggingRef.current = false;
             const coords = mapToScreenCoords(e.clientX, e.clientY);
-            flashStatus(`Clicking at (${coords.x}, ${coords.y})...`);
+            flashStatus(t('takeControl.clickingAt', { x: coords.x, y: coords.y }));
             try {
                 const res = await controlApi.click(agentId, { session_id: sessionId, x: coords.x, y: coords.y });
                 if (res.status === 'error') throw new Error(res.detail || 'Click failed');
-                flashStatus(`Clicked at (${coords.x}, ${coords.y})`);
+                flashStatus(t('takeControl.clickedAt', { x: coords.x, y: coords.y }));
             } catch (err: any) {
-                flashStatus(`Click failed: ${err.message}`);
+                flashStatus(t('takeControl.clickFailed', { error: err.message }));
             }
         }
     }, [locked, agentId, sessionId, mapToScreenCoords, flashStatus]);
@@ -263,44 +265,44 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
             isDraggingRef.current = false;
             dragOriginRef.current = null;
             setDragEnd(null);
-            flashStatus('You are in control. Click or drag on the screenshot.');
+            flashStatus(t('takeControl.inControl'));
         }
-    }, [flashStatus]);
+    }, [flashStatus, t]);
 
 
     // Handle text input
     const handleSendText = useCallback(async () => {
         if (!textInput.trim() || !locked) return;
-        flashStatus(`Typing: "${textInput.slice(0, 30)}..."`);
+        flashStatus(t('takeControl.typing', { text: textInput.slice(0, 30) }));
         try {
             const res = await controlApi.type(agentId, { session_id: sessionId, text: textInput });
             if (res.status === 'error') throw new Error(res.detail || 'Type failed');
-            flashStatus('Text sent');
+            flashStatus(t('takeControl.textSent'));
             setTextInput('');
         } catch (err: any) {
-            flashStatus(`Type failed: ${err.message}`);
+            flashStatus(t('takeControl.typeFailed', { error: err.message }));
         }
-    }, [textInput, locked, agentId, sessionId, flashStatus]);
+    }, [textInput, locked, agentId, sessionId, flashStatus, t]);
 
     // Handle quick key press
     const handleQuickKey = useCallback(async (keys: string[]) => {
         if (!locked) return;
-        flashStatus(`Pressing: ${keys.join('+')}`);
+        flashStatus(t('takeControl.pressing', { keys: keys.join('+') }));
         try {
             const res = await controlApi.pressKeys(agentId, { session_id: sessionId, keys });
             if (res.status === 'error') throw new Error(res.detail || 'Press failed');
-            flashStatus(`Pressed: ${keys.join('+')}`);
+            flashStatus(t('takeControl.pressed', { keys: keys.join('+') }));
         } catch (err: any) {
-            flashStatus(`Key press failed: ${err.message}`);
+            flashStatus(t('takeControl.keyPressFailed', { error: err.message }));
         }
-    }, [locked, agentId, sessionId, flashStatus]);
+    }, [locked, agentId, sessionId, flashStatus, t]);
 
     // Complete login — export cookies and close
     const handleComplete = useCallback(async () => {
         if (!locked) return;
         setLocked(false);
         lockedRef.current = false;  // Prevent unmount cleanup from double-unlocking
-        flashStatus('Exporting cookies...');
+        flashStatus(t('takeControl.exportingCookies'));
         try {
             // Fetch one final high-quality screenshot to hand off to the live preview
             try {
@@ -321,8 +323,8 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
             });
             flashStatus(
                 res.cookies_exported
-                    ? `Login complete! ${res.cookie_count} cookies saved.`
-                    : 'Session unlocked (no cookies exported).'
+                    ? t('takeControl.loginComplete', { count: res.cookie_count })
+                    : t('takeControl.sessionUnlocked')
             );
             // Pass the last screenshot to the parent so live preview updates
             if (lastScreenshotRef.current && onLastScreenshot) {
@@ -333,12 +335,12 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
             }
             setTimeout(onClose, 1200);
         } catch (err: any) {
-            flashStatus(`Unlock failed: ${err.message}`);
+            flashStatus(t('takeControl.unlockFailed', { error: err.message }));
             // Re-enable lock state if unlock request failed so user can try again
             setLocked(true);
             lockedRef.current = true;
         }
-    }, [locked, agentId, sessionId, platformHint, onClose, onLastScreenshot, flashStatus]);
+    }, [locked, agentId, sessionId, platformHint, onClose, onLastScreenshot, flashStatus, t]);
 
     // Handle cancel
     const handleCancel = useCallback(async () => {
@@ -355,7 +357,7 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
         }
         setLocked(false);
         lockedRef.current = false;  // Prevent unmount cleanup from double-unlocking
-        flashStatus('Canceling...');
+        flashStatus(t('takeControl.canceling'));
 
         // Fetch one final high-quality screenshot to hand off to the live preview
         try {
@@ -393,11 +395,11 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
                 <div className="tc-header">
                     <div className="tc-header-left">
                         <span className="tc-live-dot" />
-                        <span className="tc-title">Human Control</span>
+                        <span className="tc-title">{t('takeControl.title')}</span>
                         <span className="tc-divider" />
                         <span className="tc-status" key={statusFlashKey}>{statusText}</span>
                     </div>
-                    <button className="tc-close-btn" onClick={handleCancel} title="Exit without saving">
+                    <button className="tc-close-btn" onClick={handleCancel} title={t('takeControl.exitWithoutSaving')}>
                         {CloseIcon}
                     </button>
                 </div>
@@ -449,7 +451,7 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
                     ) : (
                         <div className="tc-screenshot-placeholder">
                             <div className="tc-placeholder-spinner" />
-                            <span>Connecting to session...</span>
+                            <span>{t('takeControl.connectingSession')}</span>
                         </div>
                     )}
                 </div>
@@ -464,14 +466,14 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
                             value={textInput}
                             onChange={(e) => setTextInput(e.target.value)}
                             onKeyDown={(e) => { if (e.key === 'Enter') handleSendText(); }}
-                            placeholder="Type text to send..."
+                            placeholder={t('takeControl.typeTextToSend')}
                             disabled={!locked}
                         />
                         <button
                             className="tc-send-btn"
                             onClick={handleSendText}
                             disabled={!locked || !textInput.trim()}
-                            title="Send text"
+                            title={t('takeControl.sendText')}
                         >
                             {SendIcon}
                         </button>
@@ -495,7 +497,7 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
                 {/* ── Action bar ── */}
                 <div className="tc-action-bar">
                     <div className="tc-domain-row">
-                        <span className="tc-domain-label">保存登录状态到</span>
+                        <span className="tc-domain-label">{t('takeControl.saveLoginTo')}</span>
                         <input
                             className="tc-domain-input"
                             type="text"
@@ -506,14 +508,14 @@ export default function TakeControlPanel({ agentId, sessionId, onClose, onLastSc
                     </div>
                     <div className="tc-action-buttons">
                         <button className="tc-btn-cancel" onClick={handleCancel}>
-                            退出接管
+                            {t('takeControl.exitControl')}
                         </button>
                         <button
                             className="tc-btn-save"
                             onClick={handleComplete}
                             disabled={!locked}
                         >
-                            {SaveIcon} 保存登录状态
+                            {SaveIcon} {t('takeControl.saveLoginStatus')}
                         </button>
                     </div>
                 </div>

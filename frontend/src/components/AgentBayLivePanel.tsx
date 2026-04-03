@@ -195,7 +195,7 @@ export default function AgentBayLivePanel({ liveState, visible, onToggle, agentI
             <button
                 className="live-panel-toggle"
                 onClick={onToggle}
-                title="Open live preview"
+                title={t('livePanel.openLivePreview')}
             >
                 {ExpandIcon}
                 <span className="live-panel-toggle-dot" />
@@ -204,9 +204,9 @@ export default function AgentBayLivePanel({ liveState, visible, onToggle, agentI
     }
 
     const tabLabels: Record<TabType, string> = {
-        desktop: 'Desktop',
-        browser: 'Browser',
-        code: 'Code',
+        desktop: t('livePanel.desktop'),
+        browser: t('livePanel.browser'),
+        code: t('livePanel.code'),
     };
 
     return (
@@ -215,7 +215,7 @@ export default function AgentBayLivePanel({ liveState, visible, onToggle, agentI
             <div
                 className="live-panel-resize-handle"
                 onMouseDown={handleDragMouseDown}
-                title="Drag to resize"
+                title={t('livePanel.dragToResize')}
             />
 
             {/* Header with tabs and collapse button */}
@@ -237,15 +237,15 @@ export default function AgentBayLivePanel({ liveState, visible, onToggle, agentI
                     <button
                         className="live-panel-take-control"
                         onClick={() => setShowTakeControl(true)}
-                        title="Take Control — manually interact with the browser"
+                        title={t('livePanel.takeControlTitle')}
                     >
                         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M3 3l5.5 10 1.5-4 4-1.5z" />
                         </svg>
-                        <span>Control</span>
+                        <span>{t('livePanel.control')}</span>
                     </button>
                 )}
-                <button className="live-panel-collapse" onClick={onToggle} title="Collapse">
+                <button className="live-panel-collapse" onClick={onToggle} title={t('livePanel.collapse')}>
                     {CollapseIcon}
                 </button>
             </div>
@@ -256,12 +256,12 @@ export default function AgentBayLivePanel({ liveState, visible, onToggle, agentI
                     <div className="live-panel-browser">
                         <img
                             src={liveState.desktop.screenshotUrl}
-                            alt="Desktop preview"
+                            alt={t('livePanel.desktop')}
                             className="live-panel-screenshot"
                         />
                         <div className="live-panel-badge">
                             <span className="live-dot" />
-                            Live
+                            {t('livePanel.live')}
                         </div>
                     </div>
                 )}
@@ -270,12 +270,12 @@ export default function AgentBayLivePanel({ liveState, visible, onToggle, agentI
                     <div className="live-panel-browser">
                         <img
                             src={liveState.browser.screenshotUrl}
-                            alt="Browser preview"
+                            alt={t('livePanel.browser')}
                             className="live-panel-screenshot"
                         />
                         <div className="live-panel-badge">
                             <span className="live-dot" />
-                            Live
+                            {t('livePanel.live')}
                         </div>
                     </div>
                 )}
@@ -295,7 +295,7 @@ export default function AgentBayLivePanel({ liveState, visible, onToggle, agentI
                         <span style={{ opacity: 0.5 }}>
                             {TabIcons[activeTab]}
                         </span>
-                        <span>Waiting for {tabLabels[activeTab].toLowerCase()} activity...</span>
+                        <span>{t('livePanel.waitingForActivity', { tab: tabLabels[activeTab].toLowerCase() })}</span>
                     </div>
                 )}
             </div>

@@ -961,7 +961,7 @@ export default function Layout() {
                         <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
                             {(notifications as any[]).length === 0 && (
                                 <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-tertiary)', fontSize: '13px' }}>
-                                    {isChinese ? '暂无通知' : 'No notifications'}
+                                    {t('notifications.noNotifications')}
                                 </div>
                             )}
                             {(notifications as any[]).map((n: any) => (
@@ -1010,10 +1010,10 @@ export default function Layout() {
                             <button onClick={() => setSelectedNotification(null)} style={{ background: 'none', border: 'none', color: 'var(--text-tertiary)', fontSize: '20px', cursor: 'pointer', padding: '0' }}>×</button>
                         </div>
                         <div style={{ padding: '20px 24px', overflowY: 'auto', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)', whiteSpace: 'pre-wrap' }}>
-                            {selectedNotification.body || (isChinese ? '无详细内容' : 'No details provided')}
+                            {selectedNotification.body || t('notifications.noDetails')}
                         </div>
                         <div style={{ padding: '16px 24px', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--text-tertiary)', fontSize: '12px' }}>
-                            <span>{selectedNotification.sender_name ? (isChinese ? `来自: ${selectedNotification.sender_name}` : `From: ${selectedNotification.sender_name}`) : ''}</span>
+                            <span>{selectedNotification.sender_name ? t('notifications.from', { name: selectedNotification.sender_name }) : ''}</span>
                             <span>{selectedNotification.created_at ? new Date(selectedNotification.created_at).toLocaleString() : ''}</span>
                         </div>
                     </div>

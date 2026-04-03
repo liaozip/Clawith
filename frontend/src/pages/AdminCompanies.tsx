@@ -184,7 +184,9 @@ function PlatformTab() {
         // Load email templates
         fetchJson<any>('/enterprise/email-templates')
             .then(d => {
-                if (d.templates) setEmailTemplates(d.templates);
+                if (d.defaults && d.templates) {
+                    setEmailTemplates({ ...d.defaults, ...d.templates });
+                }
                 if (d.variables) setEmailTemplateVars(d.variables);
                 if (d.defaults) setEmailTemplateDefaults(d.defaults);
             })
@@ -196,7 +198,7 @@ function PlatformTab() {
         try {
             await adminApi.updatePlatformSettings({ [key]: value });
             setSettings((s: any) => ({ ...s, [key]: value }));
-            showToast('Setting updated');
+            showToast(t('admin.settingUpdated', 'Setting updated'));
         } catch (e: any) {
             showToast(e.message || 'Failed', 'error');
         }
@@ -773,17 +775,17 @@ function CompaniesTab() {
 
     const columns: { key: SortKey; label: string; flex: string }[] = [
         { key: 'name', label: t('admin.company', 'Company'), flex: '2fr' },
-        { key: 'sso_enabled', label: 'SSO', flex: '100px' },
-        { key: 'org_admin_email', label: t('admin.orgAdmin', 'Admin Email'), flex: '1.5fr' },
+        { key: 'sso_enabled', label: t('admin.sso', 'SSO'), flex: '100px' },
+        { key: 'org_admin_email', label: t('admin.orgAdmin', 'Admin Email'), flex: '2fr' },
         { key: 'user_count', label: t('admin.users', 'Users'), flex: '70px' },
-        { key: 'agent_count', label: t('admin.agents', 'Agents'), flex: '70px' },
-        { key: 'total_tokens', label: t('admin.tokens', 'Token Usage'), flex: '100px' },
+        { key: 'agent_count', label: t('admin.agents', 'Agents'), flex: '100px' },
+        { key: 'total_tokens', label: t('admin.tokens', 'Token Usage'), flex: '120px' },
         { key: 'created_at', label: t('admin.createdAt', 'Created'), flex: '100px' },
-        { key: 'is_active', label: t('admin.status', 'Status'), flex: '100px' },
     ];
+    const statusColFlex = '100px';
     const actionColFlex = '80px';
 
-    const gridCols = columns.map(c => c.flex).join(' ') + ' ' + actionColFlex;
+    const gridCols = columns.map(c => c.flex).join(' ') + ' ' + statusColFlex + ' ' + actionColFlex;
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>

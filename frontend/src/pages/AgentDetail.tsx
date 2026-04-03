@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef, Component, ErrorInfo } fro
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 
 import ConfirmModal from '../components/ConfirmModal';
 import type { FileBrowserApi } from '../components/FileBrowser';
@@ -214,7 +215,7 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                 setConfigTool(null);
             }
             loadTools();
-        } catch (e) { alert('Save failed: ' + e); }
+        } catch (e) { alert(t('agent.tools.saveFailed') + ': ' + e); }
         setConfigSaving(false);
     };
 
@@ -243,11 +244,11 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                             <button
                                 onClick={() => openCategoryConfig(category)}
                                 style={{ background: 'none', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '3px 8px', fontSize: '11px', cursor: 'pointer', color: 'var(--text-secondary)' }}
-                                title={`Configure ${category}`}
-                            >⚙️ Config</button>
+                                title={t('agent.tools.configureCategory', { category: getCategoryLabels(t)[category] || category })}
+                            >{t('agent.tools.config')}</button>
                         )}
                         {canManage && (
-                            <label style={{ position: 'relative', display: 'inline-block', width: '40px', height: '22px', cursor: 'pointer', flexShrink: 0 }} title={`Enable/Disable all ${getCategoryLabels(t)[category] || category} tools`}>
+                            <label style={{ position: 'relative', display: 'inline-block', width: '40px', height: '22px', cursor: 'pointer', flexShrink: 0 }} title={t('agent.tools.enableDisableAll', { category: getCategoryLabels(t)[category] || category })}>
                                 <input type="checkbox"
                                     checked={(catTools as any[]).every(t => t.enabled)}
                                     onChange={async (e) => {
@@ -281,25 +282,30 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                         const hasConfig = tool.config_schema?.fields?.length > 0 || tool.type === 'mcp';
                         const hasAgentOverride = tool.agent_config && Object.keys(tool.agent_config).length > 0;
                         const isGlobalCategoryConfig = category === 'agentbay' && tool.name === 'agentbay_browser_navigate';
+                        const toolDisplayName = String(t(`enterprise.tools.toolNames.${tool.name}`, tool.display_name));
+                        const toolDescription = String(t(`enterprise.tools.toolDescriptions.${tool.name}`, tool.description));
                         return (
                             <div key={tool.id} className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, minWidth: 0 }}>
                                     <span style={{ fontSize: '18px' }}>{tool.icon}</span>
                                     <div style={{ minWidth: 0 }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                            <span style={{ fontWeight: 500, fontSize: '13px' }}>{tool.display_name}</span>
+                                            <span style={{ fontWeight: 500, fontSize: '13px' }}>{toolDisplayName}</span>
                                             {tool.type === 'mcp' && (
                                                 <span style={{ fontSize: '10px', background: 'var(--primary)', color: '#fff', borderRadius: '4px', padding: '1px 5px' }}>MCP</span>
                                             )}
                                             {tool.type === 'builtin' && (
-                                                <span style={{ fontSize: '10px', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)', borderRadius: '4px', padding: '1px 5px' }}>Built-in</span>
+                                                <span style={{ fontSize: '10px', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)', borderRadius: '4px', padding: '1px 5px' }}>{t('enterprise.tools.builtIn', 'Built-in')}</span>
+                                            )}
+                                            {tool.is_default && (
+                                                <span style={{ fontSize: '10px', background: 'rgba(0,200,100,0.15)', color: 'var(--success)', borderRadius: '4px', padding: '1px 5px' }}>{t('enterprise.tools.default')}</span>
                                             )}
                                             {hasAgentOverride && (
                                                 <span style={{ fontSize: '10px', background: 'rgba(99,102,241,0.15)', color: 'var(--accent-color)', borderRadius: '4px', padding: '1px 5px' }}>{t('enterprise.tools.configured', 'Configured')}</span>
                                             )}
                                         </div>
                                         <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                            {tool.description}
+                                            {toolDescription}
                                             {tool.mcp_server_name && <span> · {tool.mcp_server_name}</span>}
                                         </div>
                                     </div>
@@ -309,13 +315,13 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                         <button
                                             onClick={() => openConfig(tool)}
                                             style={{ background: 'none', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '3px 8px', fontSize: '11px', cursor: 'pointer', color: 'var(--text-secondary)' }}
-                                            title="Configure per-agent settings"
-                                        >⚙️ Config</button>
+                                            title={t('agent.tools.configurePerAgent')}
+                                        >{t('agent.tools.config')}</button>
                                     )}
                                     {canManage && tool.source === 'agent' && tool.agent_tool_id && (
                                         <button
                                             onClick={async () => {
-                                                if (!confirm(t('agent.tools.confirmDelete', `Remove "${tool.display_name}" from this agent?`))) return;
+                                                if (!confirm(t('agent.tools.confirmDelete', { name: tool.display_name }))) return;
                                                 setDeletingToolId(tool.id);
                                                 try {
                                                     const token = localStorage.getItem('token');
@@ -324,13 +330,13 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                                         headers: { Authorization: `Bearer ${token}` },
                                                     });
                                                     if (res.ok) await loadTools();
-                                                    else alert('Delete failed');
-                                                } catch (e) { alert('Delete failed: ' + e); }
+                                                    else alert(t('agent.tools.deleteFailed'));
+                                                } catch (e) { alert(t('agent.tools.deleteFailed') + ': ' + e); }
                                                 setDeletingToolId(null);
                                             }}
                                             disabled={deletingToolId === tool.id}
                                             style={{ background: 'none', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '3px 8px', fontSize: '11px', cursor: 'pointer', color: 'var(--text-tertiary)', opacity: deletingToolId === tool.id ? 0.5 : 1 }}
-                                            title={t('agent.tools.removeTool', 'Remove from agent')}
+                                            title={t('agent.tools.removeTool')}
                                         >{deletingToolId === tool.id ? '...' : '✕'}</button>
                                     )}
                                     {canManage ? (
@@ -426,7 +432,7 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                                 <div>
                                     <h3 style={{ margin: 0 }}>⚙️ {title}</h3>
-                                    <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '2px' }}>{isCat ? 'Shared category configuration (affects all tools in this category)' : 'Per-agent configuration (overrides global defaults)'}</div>
+                                    <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '2px' }}>{isCat ? t('agent.tools.sharedCategoryConfig') : t('agent.tools.perAgentConfig')}</div>
                                 </div>
                                 <button onClick={() => { setConfigTool(null); setConfigCategory(null); }} style={{ background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer', color: 'var(--text-secondary)' }}>✕</button>
                             </div>
@@ -450,14 +456,14 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                                 <div key={field.key}>
                                                     <label style={{ display: 'block', fontSize: '12px', fontWeight: 500, marginBottom: '4px' }}>
                                                         {field.label}
-                                                        {isReadOnly && <span style={{ fontWeight: 400, color: 'var(--text-tertiary)', marginLeft: '4px' }}>(Admin only)</span>}
+                                                        {isReadOnly && <span style={{ fontWeight: 400, color: 'var(--text-tertiary)', marginLeft: '4px' }}>{t('agent.tools.adminOnly')}</span>}
                                                         {/* Show company-configured value as a hint in the label */}
                                                         {(() => {
                                                             const globalVal = configTool?.global_config?.[field.key] ?? configGlobalData?.[field.key];
                                                             if (!globalVal) return null;
                                                             return (
                                                                 <span style={{ fontWeight: 400, color: 'var(--accent-primary)', marginLeft: '4px', fontSize: '11px' }}>
-                                                                    (company: {String(globalVal).slice(0, 20)}{String(globalVal).length > 20 ? '\u2026' : ''})
+                                                                    {t('agent.tools.company', { val: String(globalVal).slice(0, 20) + (String(globalVal).length > 20 ? '\u2026' : '') })}
                                                                 </span>
                                                             );
                                                         })()}
@@ -496,7 +502,7 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                                                         style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'text', background: 'var(--bg-tertiary)', borderColor: 'var(--border)', overflow: 'hidden' }}
                                                                         onClick={() => setFocusedField(field.key)}
                                                                     >
-                                                                        <span style={{ flex: 1, color: 'var(--text-tertiary)', fontSize: '13px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t('agent.tools.usingCompanyKey', 'Using company key ({{val}})', { val: globalVal })}</span>
+                                                                        <span style={{ flex: 1, color: 'var(--text-tertiary)', fontSize: '13px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t('agent.tools.usingCompanyKey', { val: globalVal })}</span>
                                                                         <span style={{ fontSize: '12px', color: 'var(--accent-primary)', flexShrink: 0, cursor: 'pointer' }}>{t('common.edit', 'Edit')}</span>
                                                                     </div>
                                                                 );
@@ -506,7 +512,7 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                                                 <input type="password" autoComplete="new-password" className="form-input"
                                                                     autoFocus={focusedField === field.key}
                                                                     value={configData[field.key] ?? ''}
-                                                                    placeholder={globalVal ? t('agent.tools.usingCompanyKey', 'Using company key ({{val}})', { val: globalVal }) : (field.placeholder || t('admin.leaveBlankDefault', 'Leave blank to use global default'))}
+                                                                    placeholder={globalVal ? t('agent.tools.usingCompanyKey', { val: globalVal }) : (field.placeholder || t('agent.tools.leaveBlankDefault'))}
                                                                     onBlur={(e) => {
                                                                         if (!e.target.value) setFocusedField(null);
                                                                     }}
@@ -523,7 +529,7 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                                                 <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '4px', lineHeight: '1.5' }}>
                                                                     {providerOption.help_text}
                                                                     {providerOption.help_url && (
-                                                                        <> &middot; <a href={providerOption.help_url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'none' }}>Setup guide</a></>
+                                                                        <> &middot; <a href={providerOption.help_url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'none' }}>{t('agent.tools.setupGuide')}</a></>
                                                                     )}
                                                                 </div>
                                                             );
@@ -550,7 +556,7 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                                                         style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'text', background: 'var(--bg-tertiary)', borderColor: 'var(--border)', overflow: 'hidden' }}
                                                                         onClick={() => setFocusedField(field.key)}
                                                                     >
-                                                                        <span style={{ flex: 1, color: 'var(--text-tertiary)', fontSize: '13px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t('agent.tools.usingCompanyConfig', 'Using company config ({{val}})', { val: globalVal })}</span>
+                                                                        <span style={{ flex: 1, color: 'var(--text-tertiary)', fontSize: '13px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t('agent.tools.usingCompanyConfig', { val: globalVal })}</span>
                                                                         <span style={{ fontSize: '12px', color: 'var(--accent-primary)', flexShrink: 0, cursor: 'pointer' }}>{t('common.edit', 'Edit')}</span>
                                                                     </div>
                                                                 );
@@ -560,7 +566,7 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                                                 <input type="text" className="form-input"
                                                                     autoFocus={focusedField === field.key}
                                                                     value={configData[field.key] ?? ''}
-                                                                    placeholder={globalVal ? t('agent.tools.usingCompanyConfig', 'Using company config ({{val}})', { val: globalVal }) : (field.placeholder || t('admin.leaveBlankDefault', 'Leave blank to use global default'))}
+                                                                    placeholder={globalVal ? t('agent.tools.usingCompanyConfig', { val: globalVal }) : (field.placeholder || t('agent.tools.leaveBlankDefault'))}
                                                                     onBlur={(e) => {
                                                                         if (!e.target.value) setFocusedField(null);
                                                                     }}
@@ -581,7 +587,7 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                                 onClick={async () => {
                                                     const btn = document.getElementById('email-test-btn');
                                                     const status = document.getElementById('email-test-status');
-                                                    if (btn) btn.textContent = 'Testing...';
+                                                    if (btn) btn.textContent = t('agent.tools.testing');
                                                     if (btn) (btn as HTMLButtonElement).disabled = true;
                                                     try {
                                                         const token = localStorage.getItem('token');
@@ -598,20 +604,20 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                                             status.style.color = data.ok ? 'var(--success)' : 'var(--error)';
                                                         }
                                                     } catch (e: any) {
-                                                        if (status) { status.textContent = `Error: ${e.message}`; status.style.color = 'var(--error)'; }
+                                                        if (status) { status.textContent = t('agent.tools.failed') + ': ' + e.message; status.style.color = 'var(--error)'; }
                                                     } finally {
-                                                        if (btn) { btn.textContent = 'Test Connection'; (btn as HTMLButtonElement).disabled = false; }
+                                                        if (btn) { btn.textContent = t('agent.tools.testConnection'); (btn as HTMLButtonElement).disabled = false; }
                                                     }
                                                 }}
                                                 id="email-test-btn"
-                                            >Test Connection</button>
+                                            >{t('agent.tools.testConnection')}</button>
                                             <div id="email-test-status" style={{ fontSize: '11px', whiteSpace: 'pre-line', minHeight: '16px' }}></div>
                                         </div>
                                     )}
                                 </div>
                             ) : (
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 500, marginBottom: '4px' }}>Config JSON (Agent Override)</label>
+                                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 500, marginBottom: '4px' }}>{t('agent.tools.configJson')}</label>
                                     <textarea
                                         className="form-input"
                                         value={configJson}
@@ -620,7 +626,7 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                         placeholder='{}'
                                     />
                                     <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '4px' }}>
-                                        Global default: <code style={{ fontSize: '10px' }}>{JSON.stringify(configTool?.global_config || {}).slice(0, 80)}</code>
+                                        {t('agent.tools.globalDefault')} <code style={{ fontSize: '10px' }}>{JSON.stringify(configTool?.global_config || {}).slice(0, 80)}</code>
                                     </div>
                                 </div>
                             )}
@@ -631,7 +637,7 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                         const token = localStorage.getItem('token');
                                         await fetch(`/api/tools/agents/${agentId}/tool-config/${configTool.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ config: {} }) });
                                         setConfigTool(null); loadTools();
-                                    }}>Reset to Global</button>
+                                    }}>{t('agent.tools.resetToGlobal')}</button>
                                 )}
                                 {isCat && (
                                     <button
@@ -639,7 +645,7 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                         style={{ marginRight: 'auto' }}
                                         onClick={async () => {
                                             const btn = document.getElementById('cat-test-btn');
-                                            if (btn) btn.textContent = 'Testing...';
+                                            if (btn) btn.textContent = t('agent.tools.testing');
                                             try {
                                                 const token = localStorage.getItem('token');
                                                 const res = await fetch(`/api/tools/agents/${agentId}/category-config/${configCategory}/test`, {
@@ -647,14 +653,14 @@ function ToolsManager({ agentId, canManage = false }: { agentId: string; canMana
                                                     headers: { Authorization: `Bearer ${token}` }
                                                 });
                                                 const data = await res.json();
-                                                alert(data.message || (data.ok ? '✅ Test successful' : '❌ Test failed: ' + data.error));
-                                            } catch (e: any) { alert('Test failed: ' + e.message); }
-                                            finally { if (btn) btn.textContent = 'Test Connection'; }
+                                                alert(data.message || (data.ok ? t('agent.tools.testSuccessful') : t('agent.tools.testFailed') + ': ' + data.error));
+                                            } catch (e: any) { alert(t('agent.tools.testFailed') + ': ' + e.message); }
+                                            finally { if (btn) btn.textContent = t('agent.tools.testConnection'); }
                                         }}
                                         id="cat-test-btn"
-                                    >Test Connection</button>
+                                    >{t('agent.tools.testConnection')}</button>
                                 )}
-                                <button className="btn btn-secondary" onClick={() => { setConfigTool(null); setConfigCategory(null); }}>Cancel</button>
+                                <button className="btn btn-secondary" onClick={() => { setConfigTool(null); setConfigCategory(null); }}>{t('common.cancel')}</button>
                                 <button className="btn btn-primary" onClick={saveConfig} disabled={configSaving}>{configSaving ? t('common.saving', 'Saving…') : t('common.save', 'Save')}</button>
                             </div>
                         </div>
@@ -691,6 +697,7 @@ const getAgentRelationOptions = getRelationOptions;
 
 /** Tiny copy button shown on hover at the bottom of message bubbles */
 function CopyMessageButton({ text }: { text: string }) {
+    const { t } = useTranslation();
     const [copied, setCopied] = React.useState(false);
     const handleCopy = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -722,7 +729,7 @@ function CopyMessageButton({ text }: { text: string }) {
     return (
         <button
             onClick={handleCopy}
-            title="Copy"
+            title={t('common.copy')}
             style={{
                 background: 'none', border: 'none', cursor: 'pointer', padding: '2px',
                 color: copied ? 'var(--accent-text)' : 'var(--text-tertiary)',
@@ -1292,7 +1299,7 @@ function RelationshipEditor({ agentId, readOnly = false }: { agentId: string; re
                     <div style={{ border: '1px solid rgba(16,185,129,0.5)', borderRadius: '8px', padding: '12px', background: 'var(--bg-elevated)' }}>
                         <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
                             <select className="input" value={selectedAgentId} onChange={e => setSelectedAgentId(e.target.value)} style={{ flex: 1, minWidth: 0, fontSize: '12px' }}>
-                                <option value="">— Select Agent —</option>
+                                <option value="">{t('agent.tools.selectAgent')}</option>
                                 {availableAgents.map((a: any) => <option key={a.id} value={a.id}>{a.name} — {a.role_description || 'Agent'}</option>)}
                             </select>
                             <select className="input" value={agentRelation} onChange={e => setAgentRelation(e.target.value)} style={{ width: '150px', flexShrink: 0, fontSize: '12px' }}>
@@ -1688,11 +1695,11 @@ function AgentDetailInner() {
             } else {
                 const err = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
                 console.error('Failed to create session:', err);
-                alert(`Failed to create session: ${err.detail || res.status}`);
+                alert(`${t('agent.tools.failedToCreateSession')}: ${err.detail || res.status}`);
             }
         } catch (err: any) {
             console.error('Failed to create session:', err);
-            alert(`Failed to create session: ${err.message || err}`);
+            alert(`${t('agent.tools.failedToCreateSession')}: ${err.message || err}`);
         }
     };
 
@@ -1749,7 +1756,7 @@ function AgentDetailInner() {
             });
             queryClient.invalidateQueries({ queryKey: ['agent', id] });
             setShowExpiryModal(false);
-        } catch (e) { alert('Failed: ' + e); }
+        } catch (e) { alert(t('agent.tools.failed') + ': ' + e); }
         setExpirySaving(false);
     };
     interface ChatMsg { role: 'user' | 'assistant' | 'tool_call'; content: string; fileName?: string; toolName?: string; toolArgs?: any; toolStatus?: 'running' | 'done'; toolResult?: string; thinking?: string; imageUrl?: string; timestamp?: string; }
@@ -2570,7 +2577,7 @@ function AgentDetailInner() {
 
 
     const CopyBtn = ({ url }: { url: string }) => (
-        <button title="Copy" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginLeft: '6px', padding: '1px 4px', cursor: 'pointer', borderRadius: '3px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-secondary)', verticalAlign: 'middle', lineHeight: 1 }}
+        <button title={t('common.copy')} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginLeft: '6px', padding: '1px 4px', cursor: 'pointer', borderRadius: '3px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-secondary)', verticalAlign: 'middle', lineHeight: 1 }}
             onClick={() => copyToClipboard(url).then(() => { })}>
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="4" y="4" width="9" height="11" rx="1.5" /><path d="M3 11H2a1 1 0 01-1-1V2a1 1 0 011-1h8a1 1 0 011 1v1" />
@@ -2733,7 +2740,7 @@ function AgentDetailInner() {
                                     </span>
                                 )}
                                 {(agent as any).is_expired && (
-                                    <span style={{ background: 'var(--error)', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>Expired</span>
+                                    <span style={{ background: 'var(--error)', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>{t('agent.tools.expired')}</span>
                                 )}
                                 {(agent as any).agent_type === 'openclaw' && (
                                     <span style={{
@@ -3736,26 +3743,26 @@ function AgentDetailInner() {
                                                 style={{ fontSize: '13px' }}
                                                 onClick={() => { setShowAgentUrlImport(true); setAgentUrlInput(''); }}
                                             >
-                                                Import from URL
+                                                {t('agent.tools.importFromUrl')}
                                             </button>
                                             <button
                                                 className="btn btn-secondary"
                                                 style={{ fontSize: '13px' }}
                                                 onClick={() => { setShowAgentClawhub(true); setAgentClawhubQuery(''); setAgentClawhubResults([]); }}
                                             >
-                                                Browse ClawHub
+                                                {t('agent.tools.browseClawhub')}
                                             </button>
                                             <button
                                                 className="btn btn-primary"
                                                 style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
                                                 onClick={() => setShowImportSkillModal(true)}
                                             >
-                                                Import from Presets
+                                                {t('agent.tools.importFromPresets')}
                                             </button>
                                         </div>
                                     </div>
                                     <div style={{ marginTop: '8px', padding: '10px 14px', background: 'var(--bg-secondary)', borderRadius: '8px', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                                        <strong>Skill Format:</strong><br />
+                                        <strong>{t('agent.skills.skillFormat')}</strong><br />
                                         • <code>skills/my-skill/SKILL.md</code> — {t('agent.skills.folderFormat', 'Each skill is a folder with a SKILL.md file and optional auxiliary files (scripts/, examples/)')}
                                     </div>
                                 </div>
@@ -3766,16 +3773,16 @@ function AgentDetailInner() {
                                     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowAgentClawhub(false)}>
                                         <div onClick={e => e.stopPropagation()} style={{ background: 'var(--bg-primary)', borderRadius: '12px', padding: '24px', maxWidth: '600px', width: '90%', maxHeight: '70vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                                                <h3>Browse ClawHub</h3>
+                                                <h3>{t('agent.tools.browseClawhubTitle')}</h3>
                                                 <button onClick={() => setShowAgentClawhub(false)} style={{ background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer', color: 'var(--text-secondary)', padding: '4px 8px' }}>x</button>
                                             </div>
                                             <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '0 0 12px' }}>
-                                                Search and install skills from ClawHub directly into this agent's workspace.
+                                                {t('agent.tools.browseClawhubDesc')}
                                             </p>
                                             <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
                                                 <input
                                                     className="input"
-                                                    placeholder="Search skills..."
+                                                    placeholder={t('agent.tools.searchSkills')}
                                                     value={agentClawhubQuery}
                                                     onChange={e => setAgentClawhubQuery(e.target.value)}
                                                     onKeyDown={e => {
@@ -3795,12 +3802,12 @@ function AgentDetailInner() {
                                                         skillApi.clawhub.search(agentClawhubQuery).then(r => { setAgentClawhubResults(r); setAgentClawhubSearching(false); }).catch(() => setAgentClawhubSearching(false));
                                                     }}
                                                 >
-                                                    {agentClawhubSearching ? 'Searching...' : 'Search'}
+                                                    {agentClawhubSearching ? t('common.searching', 'Searching...') : t('common.search')}
                                                 </button>
                                             </div>
                                             <div style={{ flex: 1, overflowY: 'auto' }}>
                                                 {agentClawhubResults.length === 0 && !agentClawhubSearching && (
-                                                    <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-tertiary)', fontSize: '13px' }}>Search ClawHub to find skills</div>
+                                                    <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-tertiary)', fontSize: '13px' }}>{t('agent.tools.searchClawhubHint', 'Search ClawHub to find skills')}</div>
                                                 )}
                                                 {agentClawhubResults.map((r: any) => (
                                                     <div key={r.slug} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', borderRadius: '8px', marginBottom: '6px', border: '1px solid var(--border-subtle)', background: 'var(--bg-secondary)' }}>
@@ -3820,16 +3827,16 @@ function AgentDetailInner() {
                                                                 setAgentClawhubInstalling(r.slug);
                                                                 try {
                                                                     const res = await skillApi.agentImport.fromClawhub(id!, r.slug);
-                                                                    alert(`Installed "${r.displayName || r.slug}" (${res.files_written} files)`);
+                                                                    alert(t('agent.tools.installedSuccess', { name: r.displayName || r.slug, count: res.files_written }));
                                                                     queryClient.invalidateQueries({ queryKey: ['files', id, 'skills'] });
                                                                 } catch (err: any) {
-                                                                    alert(`Import failed: ${err?.message || err}`);
+                                                                    alert(t('agent.tools.importFailed') + ': ' + (err?.message || err));
                                                                 } finally {
                                                                     setAgentClawhubInstalling(null);
                                                                 }
                                                             }}
                                                         >
-                                                            {agentClawhubInstalling === r.slug ? 'Installing...' : 'Install'}
+                                                            {agentClawhubInstalling === r.slug ? t('agent.tools.installing') : t('agent.tools.install')}
                                                         </button>
                                                     </div>
                                                 ))}
@@ -3843,11 +3850,11 @@ function AgentDetailInner() {
                                     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowAgentUrlImport(false)}>
                                         <div onClick={e => e.stopPropagation()} style={{ background: 'var(--bg-primary)', borderRadius: '12px', padding: '24px', maxWidth: '500px', width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                                                <h3>Import from GitHub URL</h3>
+                                                <h3>{t('agent.skills.importFromGithub')}</h3>
                                                 <button onClick={() => setShowAgentUrlImport(false)} style={{ background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer', color: 'var(--text-secondary)', padding: '4px 8px' }}>x</button>
                                             </div>
                                             <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '0 0 12px' }}>
-                                                Paste a GitHub URL pointing to a skill directory (must contain SKILL.md).
+                                                {t('agent.skills.githubUrlDesc')}
                                             </p>
                                             <input
                                                 className="input"
@@ -3857,7 +3864,7 @@ function AgentDetailInner() {
                                                 style={{ width: '100%', fontSize: '13px', marginBottom: '12px', boxSizing: 'border-box' }}
                                             />
                                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                                                <button className="btn btn-secondary" onClick={() => setShowAgentUrlImport(false)}>Cancel</button>
+                                                <button className="btn btn-secondary" onClick={() => setShowAgentUrlImport(false)}>{t('common.cancel')}</button>
                                                 <button
                                                     className="btn btn-primary"
                                                     disabled={!agentUrlInput.trim() || agentUrlImporting}
@@ -3865,17 +3872,17 @@ function AgentDetailInner() {
                                                         setAgentUrlImporting(true);
                                                         try {
                                                             const res = await skillApi.agentImport.fromUrl(id!, agentUrlInput.trim());
-                                                            alert(`Imported ${res.files_written} files`);
+                                                            alert(t('agent.tools.importedFiles', { count: res.files_written }));
                                                             queryClient.invalidateQueries({ queryKey: ['files', id, 'skills'] });
                                                             setShowAgentUrlImport(false);
                                                         } catch (err: any) {
-                                                            alert(`Import failed: ${err?.message || err}`);
+                                                            alert(t('agent.tools.importFailed') + ': ' + (err?.message || err));
                                                         } finally {
                                                             setAgentUrlImporting(false);
                                                         }
                                                     }}
                                                 >
-                                                    {agentUrlImporting ? 'Importing...' : 'Import'}
+                                                    {agentUrlImporting ? t('agent.tools.importing') : t('agent.tools.import')}
                                                 </button>
                                             </div>
                                         </div>
@@ -3895,9 +3902,9 @@ function AgentDetailInner() {
                                             </p>
                                             <div style={{ flex: 1, overflowY: 'auto' }}>
                                                 {!globalSkillsForImport ? (
-                                                    <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-tertiary)' }}>Loading...</div>
+                                                    <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-tertiary)' }}>{t('common.loading')}</div>
                                                 ) : globalSkillsForImport.length === 0 ? (
-                                                    <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-tertiary)' }}>No preset skills available</div>
+                                                    <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-tertiary)' }}>{t('agent.tools.noPresetSkills')}</div>
                                                 ) : (
                                                     globalSkillsForImport.map((skill: any) => (
                                                         <div
@@ -3914,13 +3921,13 @@ function AgentDetailInner() {
                                                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
                                                                 <span style={{ fontSize: '20px' }}>{skill.icon || '📋'}</span>
                                                                 <div>
-                                                                    <div style={{ fontWeight: 600, fontSize: '14px' }}>{skill.name}</div>
+                                                                    <div style={{ fontWeight: 600, fontSize: '14px' }}>{String(t(`agent.skillNames.${skill.folder_name}`, skill.name))}</div>
                                                                     <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '2px' }}>
-                                                                        {skill.description?.substring(0, 100)}{skill.description?.length > 100 ? '...' : ''}
+                                                                        {String(t(`agent.skillDescriptions.${skill.folder_name}`, skill.description || '')).substring(0, 100)}{String(t(`agent.skillDescriptions.${skill.folder_name}`, skill.description || '')).length > 100 ? '...' : ''}
                                                                     </div>
                                                                     <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '2px' }}>
                                                                         📁 {skill.folder_name}
-                                                                        {skill.is_default && <span style={{ marginLeft: '8px', color: 'var(--accent-primary)', fontWeight: 600 }}>✓ Default</span>}
+                                                                        {skill.is_default && <span style={{ marginLeft: '8px', color: 'var(--accent-primary)', fontWeight: 600 }}>✓ {t('enterprise.tools.default')}</span>}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -3932,17 +3939,17 @@ function AgentDetailInner() {
                                                                     setImportingSkillId(skill.id);
                                                                     try {
                                                                         const res = await fileApi.importSkill(id!, skill.id);
-                                                                        alert(`✅ Imported "${skill.name}" (${res.files_written} files)`);
+                                                                        alert(t('agent.skills.importedSuccess', { name: t(`agent.skillNames.${skill.folder_name}`, skill.name), count: res.files_written }));
                                                                         queryClient.invalidateQueries({ queryKey: ['files', id, 'skills'] });
                                                                         setShowImportSkillModal(false);
                                                                     } catch (err: any) {
-                                                                        alert(`❌ Import failed: ${err?.message || err}`);
+                                                                        alert(t('agent.skills.importFailed') + ': ' + (err?.message || err));
                                                                     } finally {
                                                                         setImportingSkillId(null);
                                                                     }
                                                                 }}
                                                             >
-                                                                {importingSkillId === skill.id ? '⏳ ...' : '⬇️ Import'}
+                                                                {importingSkillId === skill.id ? `⏳ ${t('agent.skills.importing')}` : `⬇️ ${t('agent.skills.importBtn')}`}
                                                             </button>
                                                         </div>
                                                     ))
@@ -3993,104 +4000,23 @@ function AgentDetailInner() {
                             }}
                         >
                             {/* ── Left: session sidebar ── */}
-                            <div className={`session-sidebar ${sessionListCollapsed ? 'collapsed' : ''}`} style={{ width: sessionListCollapsed ? '0px' : '220px', transition: 'width 0.2s ease', flexShrink: 0, minHeight: 0, borderRight: sessionListCollapsed ? 'none' : '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                                {/* ── Header: title + collapse, then new session ── */}
-                                <div style={{ flexShrink: 0 }}>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'space-between',
-                                            gap: '8px',
-                                            padding: '10px 12px 8px',
-                                            minHeight: '40px',
-                                            boxSizing: 'border-box',
-                                        }}
-                                    >
-                                        <span
-                                            style={{
-                                                fontSize: '14px',
-                                                fontWeight: 600,
-                                                color: 'var(--text-primary)',
-                                                lineHeight: '1.25',
-                                                flex: 1,
-                                                minWidth: 0,
-                                            }}
-                                        >
-                                            {t('agent.chat.sessionListTitle')}
-                                        </span>
-                                        {!sessionListCollapsed && (
-                                            <button
-                                                type="button"
-                                                onClick={() => setSessionListCollapsed(true)}
-                                                className="session-sidebar-collapseBtn"
-                                                style={{
-                                                    display: 'inline-flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    background: 'none',
-                                                    border: 'none',
-                                                    color: 'var(--text-tertiary)',
-                                                    cursor: 'pointer',
-                                                    padding: '4px',
-                                                    borderRadius: '4px',
-                                                    flexShrink: 0,
-                                                    lineHeight: 0,
-                                                }}
-                                                title={t('agent.chat.collapseSidebar')}
-                                                onMouseEnter={(e) => {
-                                                    e.currentTarget.style.background = 'var(--bg-secondary)';
-                                                }}
-                                                onMouseLeave={(e) => {
-                                                    e.currentTarget.style.background = 'none';
-                                                }}
-                                            >
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                                                    <path d="M15 18l-6-6 6-6" />
-                                                </svg>
-                                            </button>
-                                        )}
-                                    </div>
-                                    {!canViewAllAgentChatSessions && (
-                                        <div style={{ padding: '0 12px 10px' }}>
-                                            <button
-                                                type="button"
-                                                onClick={createNewSession}
-                                                style={{
-                                                    width: '100%',
-                                                    height: '28px',
-                                                    padding: '0 10px',
-                                                    background: 'none',
-                                                    border: '1px solid var(--border-subtle)',
-                                                    borderRadius: '6px',
-                                                    cursor: 'pointer',
-                                                    fontSize: '12px',
-                                                    color: 'var(--text-secondary)',
-                                                    textAlign: 'left',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '6px',
-                                                    transition: 'all 0.15s ease',
-                                                    boxSizing: 'border-box',
-                                                }}
-                                                onMouseEnter={(e) => {
-                                                    e.currentTarget.style.background = 'var(--bg-secondary)';
-                                                    e.currentTarget.style.color = 'var(--text-primary)';
-                                                    e.currentTarget.style.borderColor = 'var(--accent-primary)';
-                                                }}
-                                                onMouseLeave={(e) => {
-                                                    e.currentTarget.style.background = 'none';
-                                                    e.currentTarget.style.color = 'var(--text-secondary)';
-                                                    e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                                                }}
-                                            >
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                                                    <line x1="12" y1="5" x2="12" y2="19" />
-                                                    <line x1="5" y1="12" x2="19" y2="12" />
-                                                </svg>
-                                                {t('agent.chat.newSession')}
-                                            </button>
-                                        </div>
+                            <div className={`session-sidebar ${sessionListCollapsed ? 'collapsed' : ''}`} style={{ width: sessionListCollapsed ? '0px' : '220px', transition: 'width 0.2s ease', flexShrink: 0, borderRight: sessionListCollapsed ? 'none' : '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                                {/* Tab row */}
+                                <div style={{ display: 'flex', alignItems: 'center', padding: '10px 12px 0', gap: '4px', borderBottom: '1px solid var(--border-subtle)', position: 'relative' }}>
+                                    {!sessionListCollapsed && (
+                                        <button onClick={() => setSessionListCollapsed(true)} className="session-sidebar-collapseBtn" style={{ position: 'absolute', top: '6px', right: '4px', zIndex: 10, background: 'none', border: 'none', color: 'var(--text-tertiary)', cursor: 'pointer', padding: '4px', borderRadius: '4px' }} title={t('agent.chat.collapseSessions')} onMouseEnter={e => e.currentTarget.style.background='var(--bg-secondary)'} onMouseLeave={e => e.currentTarget.style.background='none'}>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                                        </button>
+                                    )}
+                                    <button onClick={() => setChatScope('mine')}
+                                        style={{ flex: 1, padding: '5px 0', background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: chatScope === 'mine' ? 600 : 400, color: chatScope === 'mine' ? 'var(--text-primary)' : 'var(--text-tertiary)', borderBottom: chatScope === 'mine' ? '2px solid var(--accent-primary)' : '2px solid transparent', paddingBottom: '8px' }}>
+                                        {t('agent.chat.mySessions')}
+                                    </button>
+                                    {isAdmin && (
+                                        <button onClick={() => { setChatScope('all'); fetchAllSessions(); }}
+                                            style={{ flex: 1, padding: '5px 0', background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: chatScope === 'all' ? 600 : 400, color: chatScope === 'all' ? 'var(--text-primary)' : 'var(--text-tertiary)', borderBottom: chatScope === 'all' ? '2px solid var(--accent-primary)' : '2px solid transparent', paddingBottom: '8px' }}>
+                                            {t('agent.chat.allUsers')}
+                                        </button>
                                     )}
                                 </div>
 
@@ -4132,46 +4058,28 @@ function AgentDetailInner() {
                                 <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                                     {(!canViewAllAgentChatSessions || chatScope === 'mine') ? (
                                         <>
-                                            {canViewAllAgentChatSessions && (
-                                                <div style={{ padding: '0 12px 8px', flexShrink: 0 }}>
-                                                    <button
-                                                        type="button"
-                                                        onClick={createNewSession}
-                                                        style={{
-                                                            width: '100%',
-                                                            height: '28px',
-                                                            padding: '0 10px',
-                                                            background: 'none',
-                                                            border: '1px solid var(--border-subtle)',
-                                                            borderRadius: '6px',
-                                                            cursor: 'pointer',
-                                                            fontSize: '12px',
-                                                            color: 'var(--text-secondary)',
-                                                            textAlign: 'center',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            gap: '6px',
-                                                            transition: 'all 0.15s ease',
-                                                            boxSizing: 'border-box',
-                                                        }}
-                                                        onMouseEnter={(e) => {
-                                                            e.currentTarget.style.background = 'var(--bg-secondary)';
-                                                            e.currentTarget.style.color = 'var(--text-primary)';
-                                                            e.currentTarget.style.borderColor = 'var(--accent-primary)';
-                                                        }}
-                                                        onMouseLeave={(e) => {
-                                                            e.currentTarget.style.background = 'none';
-                                                            e.currentTarget.style.color = 'var(--text-secondary)';
-                                                            e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                                                        }}
-                                                    >
-                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                                                            <line x1="12" y1="5" x2="12" y2="19" />
-                                                            <line x1="5" y1="12" x2="19" y2="12" />
-                                                        </svg>
-                                                        {t('agent.chat.newSession')}
-                                                    </button>
+                                            {/* User filter dropdown */}
+                                            <div style={{ padding: '8px 10px', borderBottom: '1px solid var(--border-subtle)' }}>
+                                                <select
+                                                    value={allUserFilter}
+                                                    onChange={e => setAllUserFilter(e.target.value)}
+                                                    style={{ width: '100%', padding: '4px 6px', fontSize: '11px', background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderRadius: '5px', color: 'var(--text-primary)', cursor: 'pointer' }}
+                                                >
+                                                    <option value="">{t('agent.chat.allUsers')}</option>
+                                                    {Array.from(new Set(allSessions.map((s: any) => s.username || s.user_id))).filter(Boolean).map((u: any) => (
+                                                        <option key={u} value={u}>{u}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            {/* Loading skeleton */}
+                                            {allSessionsLoading && (
+                                                <div style={{ padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                    {[...Array(6)].map((_, i) => (
+                                                        <div key={i} style={{ padding: '6px 0', animation: 'pulse 1.5s ease-in-out infinite', animationDelay: `${i * 0.1}s` }}>
+                                                            <div style={{ height: '12px', width: `${70 + (i % 3) * 10}%`, background: 'var(--bg-tertiary)', borderRadius: '4px', marginBottom: '6px' }} />
+                                                            <div style={{ height: '10px', width: `${40 + (i % 4) * 8}%`, background: 'var(--bg-tertiary)', borderRadius: '3px', opacity: 0.6 }} />
+                                                        </div>
+                                                    ))}
                                                 </div>
                                             )}
                                             <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '4px 0' }}>
@@ -4280,7 +4188,7 @@ function AgentDetailInner() {
                             <div className={`agent-chat-area ${ !!(liveState.desktop || liveState.browser || liveState.code) ? 'has-live-panel' : ''}`} style={{ flex: 1, display: 'flex', flexDirection: 'row', position: 'relative', minWidth: 0, overflow: 'hidden' }}>
                                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', minWidth: 0, overflow: 'hidden' }}>
                                     {sessionListCollapsed && (
-                                        <button onClick={() => setSessionListCollapsed(false)} style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 10, width: '28px', height: '28px', borderRadius: '6px', background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', cursor: 'pointer' }} title="Show chat sessions" onMouseEnter={e => e.currentTarget.style.background='var(--bg-secondary)'} onMouseLeave={e => e.currentTarget.style.background='var(--bg-elevated)'}>
+                                        <button onClick={() => setSessionListCollapsed(false)} style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 10, width: '28px', height: '28px', borderRadius: '6px', background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }} title={t('agent.chat.showSessions')} onMouseEnter={e => e.currentTarget.style.background='var(--bg-secondary)'} onMouseLeave={e => e.currentTarget.style.background='var(--bg-elevated)'}>
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
                                         </button>
                                     )}
@@ -4817,7 +4725,7 @@ function AgentDetailInner() {
                                     {pending.length > 0 && (
                                         <>
                                             <h4 style={{ margin: '0 0 12px', fontSize: '13px', color: 'var(--warning)' }}>
-                                                {isChinese ? `${pending.length} 个待审批` : `${pending.length} Pending`}
+                                                {t('agent.settings.approvals.pending', { count: pending.length })}
                                             </h4>
                                             {pending.map((a: any) => (
                                                 <div key={a.id} style={{
@@ -4844,7 +4752,7 @@ function AgentDetailInner() {
                                                             onClick={() => resolveMut.mutate({ approvalId: a.id, action: 'approve' })}
                                                             disabled={resolveMut.isPending}
                                                         >
-                                                            {isChinese ? '批准' : 'Approve'}
+                                                            {t('agent.settings.approvals.approve')}
                                                         </button>
                                                         <button
                                                             className="btn btn-danger"
@@ -4852,7 +4760,7 @@ function AgentDetailInner() {
                                                             onClick={() => resolveMut.mutate({ approvalId: a.id, action: 'reject' })}
                                                             disabled={resolveMut.isPending}
                                                         >
-                                                            {isChinese ? '拒绝' : 'Reject'}
+                                                            {t('agent.settings.approvals.reject')}
                                                         </button>
                                                     </div>
                                                 </div>
@@ -4862,11 +4770,11 @@ function AgentDetailInner() {
                                     )}
                                     {/* History */}
                                     <h4 style={{ margin: '0 0 12px', fontSize: '13px', color: 'var(--text-secondary)' }}>
-                                        {isChinese ? '审批历史' : 'History'}
+                                        {t('agent.settings.approvals.history')}
                                     </h4>
                                     {resolved.length === 0 && pending.length === 0 && (
                                         <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)', fontSize: '13px' }}>
-                                            {isChinese ? '暂无审批记录' : 'No approval records'}
+                                            {t('agent.settings.approvals.noRecords')}
                                         </div>
                                     )}
                                     {resolved.map((a: any) => (
@@ -5104,19 +5012,16 @@ function AgentDetailInner() {
 
                                 {/* Trigger Limits — native agents only */}
                                 {(agent as any)?.agent_type !== 'openclaw' && (() => {
-                                    const isChinese = i18n.language?.startsWith('zh');
                                     return (
                                         <div className="card" style={{ marginBottom: '12px' }}>
-                                            <h4 style={{ marginBottom: '4px' }}>{isChinese ? '触发器限制' : 'Trigger Limits'}</h4>
+                                            <h4 style={{ marginBottom: '4px' }}>{t('agent.settings.triggerLimits.title')}</h4>
                                             <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '12px' }}>
-                                                {isChinese
-                                                    ? '控制该 Agent 可以创建的触发器数量和行为限制'
-                                                    : 'Limit how many triggers this agent can create and their behavior'}
+                                                {t('agent.settings.triggerLimits.description', 'Limit how many triggers this agent can create and their behavior')}
                                             </p>
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
                                                 <div>
                                                     <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '6px' }}>
-                                                        {isChinese ? '最大触发器数' : 'Max Triggers'}
+                                                        {t('agent.settings.triggerLimits.maxTriggers')}
                                                     </label>
                                                     <input
                                                         className="input"
@@ -5128,12 +5033,12 @@ function AgentDetailInner() {
                                                         style={{ width: '100%' }}
                                                     />
                                                     <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '4px' }}>
-                                                        {isChinese ? 'Agent 最多可同时拥有的触发器数量' : 'Max active triggers the agent can have'}
+                                                        {t('agent.settings.triggerLimits.maxTriggersDesc')}
                                                     </div>
                                                 </div>
                                                 <div>
                                                     <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '6px' }}>
-                                                        {isChinese ? 'Poll 最短间隔 (分钟)' : 'Min Poll Interval (min)'}
+                                                        {t('agent.settings.triggerLimits.minPollInterval')}
                                                     </label>
                                                     <input
                                                         className="input"
@@ -5145,12 +5050,12 @@ function AgentDetailInner() {
                                                         style={{ width: '100%' }}
                                                     />
                                                     <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '4px' }}>
-                                                        {isChinese ? '定时轮询外部接口的最短间隔' : 'Minimum interval for polling external URLs'}
+                                                        {t('agent.settings.triggerLimits.minPollIntervalDesc')}
                                                     </div>
                                                 </div>
                                                 <div>
                                                     <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '6px' }}>
-                                                        {isChinese ? 'Webhook 频率限制 (次/分钟)' : 'Webhook Rate Limit (/min)'}
+                                                        {t('agent.settings.triggerLimits.webhookRateLimit')}
                                                     </label>
                                                     <input
                                                         className="input"
@@ -5162,7 +5067,7 @@ function AgentDetailInner() {
                                                         style={{ width: '100%' }}
                                                     />
                                                     <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '4px' }}>
-                                                        {isChinese ? '外部系统每分钟最多可调用的 Webhook 次数' : 'Max webhook calls per minute from external services'}
+                                                        {t('agent.settings.triggerLimits.webhookRateLimitDesc')}
                                                     </div>
                                                 </div>
                                             </div>
@@ -5177,7 +5082,6 @@ function AgentDetailInner() {
 
                                 {/* Welcome Message */}
                                 {(() => {
-                                    const isChinese = i18n.language?.startsWith('zh');
                                     const saveWm = async () => {
                                         try {
                                             await agentApi.update(id!, { welcome_message: wmDraft } as any);
@@ -5189,13 +5093,11 @@ function AgentDetailInner() {
                                     return (
                                         <div className="card" style={{ marginBottom: '12px' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                                                <h4 style={{ margin: 0 }}>{isChinese ? '欢迎语' : 'Welcome Message'}</h4>
-                                                {wmSaved && <span style={{ fontSize: '12px', color: 'var(--success)' }}>✓ {isChinese ? '已保存' : 'Saved'}</span>}
+                                                <h4 style={{ margin: 0 }}>{t('agent.settings.welcomeMessage.title')}</h4>
+                                                {wmSaved && <span style={{ fontSize: '12px', color: 'var(--success)' }}>✓ {t('agent.settings.welcomeMessage.saved')}</span>}
                                             </div>
                                             <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '12px' }}>
-                                                {isChinese
-                                                    ? '当用户在网页端发起新对话时，Agent 会自动发送的欢迎语。支持 Markdown 语法。留空则不发送。'
-                                                    : 'Greeting message sent automatically when a user starts a new web conversation. Supports Markdown. Leave empty to disable.'}
+                                                {t('agent.settings.welcomeMessage.description', 'Greeting message sent automatically when a user starts a new web conversation. Supports Markdown. Leave empty to disable.')}
                                             </p>
                                             <textarea
                                                 className="input"
@@ -5203,7 +5105,7 @@ function AgentDetailInner() {
                                                 value={wmDraft}
                                                 onChange={e => setWmDraft(e.target.value)}
                                                 onBlur={saveWm}
-                                                placeholder={isChinese ? '例如：你好！我是你的 AI 助手，有什么可以帮你的吗？' : "e.g. Hello! I'm your AI assistant. How can I help you?"}
+                                                placeholder={t('agent.settings.welcomeMessage.placeholder')}
                                                 style={{
                                                     width: '100%', minHeight: '80px', resize: 'vertical',
                                                     fontFamily: 'inherit', fontSize: '13px',
@@ -5441,8 +5343,8 @@ function AgentDetailInner() {
                                                 'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Europe/Moscow',
                                                 'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles',
                                                 'America/Sao_Paulo', 'Australia/Sydney', 'Pacific/Auckland'].map(tz => (
-                                                    <option key={tz} value={tz}>{tz}</option>
-                                                ))}
+                                                <option key={tz} value={tz}>{t(`agent.settings.timezone.zones.${tz}`, tz)}</option>
+                                            ))}
                                         </select>
                                     </div>
                                 </div>
@@ -5745,16 +5647,16 @@ class AgentDetailErrorBoundary extends Component<{ children: React.ReactNode }, 
         if (this.state.hasError) {
             return (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', gap: '16px' }}>
-                    <div style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Something went wrong</div>
+                    <div style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>{i18n.t('agent.tools.somethingWentWrong')}</div>
                     <div style={{ fontSize: '13px', color: 'var(--text-tertiary)', maxWidth: '400px', textAlign: 'center' }}>
-                        {this.state.error?.message || 'An unexpected error occurred while loading this page.'}
+                        {this.state.error?.message || i18n.t('agent.tools.unexpectedError')}
                     </div>
                     <button
                         className="btn btn-primary"
                         onClick={() => { this.setState({ hasError: false, error: null }); window.location.reload(); }}
                         style={{ marginTop: '8px' }}
                     >
-                        Reload Page
+                        {i18n.t('agent.tools.reloadPage')}
                     </button>
                 </div>
             );

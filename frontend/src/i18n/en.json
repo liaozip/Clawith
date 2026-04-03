@@ -187,12 +187,12 @@
       "creating": "Creating",
       "error": "Error",
       "disconnected": "Disconnected",
-      "24hActions": "⏰ 24h Actions",
+      "24hActions": "24h Actions",
       "24hActionsTooltip": "Total recorded operations in the past 24 hours, including chats, tool calls, task executions, etc.",
-      "llmCallsToday": "🤖 LLM Calls Today",
+      "llmCallsToday": "LLM Calls Today",
       "max": "Max",
-      "totalToken": "📊 Total Token",
-      "pending": "⏳ Pending"
+      "totalToken": "Total Token",
+      "pending": "Pending"
     },
     "tabs": {
       "status": "Status",
@@ -210,26 +210,26 @@
     },
     "fields": {
       "name": "Name",
-      "role": "👤 Role",
+      "role": "Role",
       "avatar": "Avatar",
       "personality": "Personality",
       "boundaries": "Boundaries",
       "lastActive": "Last Active",
       "tasksInProgress": "In Progress",
       "supervisions": "Supervisions",
-      "createdBy": "👨‍💼 Created by"
+      "createdBy": "Created by"
     },
     "profile": {
-      "title": "📋 Agent Profile",
-      "created": "📅 Created",
-      "lastActive": "⏰ Last Active",
-      "timezone": "🌐 Timezone"
+      "title": "Agent Profile",
+      "created": "Created",
+      "lastActive": "Last Active",
+      "timezone": "Timezone"
     },
     "modelConfig": {
-      "title": "🤖 Model Config",
-      "model": "🧠 Model",
-      "provider": "🏢 Provider",
-      "contextRounds": "🔄 Context Window"
+      "title": "Model Config",
+      "model": "Model",
+      "provider": "Provider",
+      "contextRounds": "Context Window"
     },
     "actions": {
       "start": "Start",
@@ -336,13 +336,6 @@
       "newSkill": "New Skill",
       "flatFormat": "Simple skill (single .md file)",
       "folderFormat": "Folder skill with auxiliary files (scripts/, references/)",
-      "save": "Save",
-      "delete": "Delete",
-      "edit": "Edit",
-      "cancel": "Cancel",
-      "toolName": "Tool Name",
-      "enabled": "Enabled",
-      "disabled": "Disabled",
       "skillFormat": "Skill Format:",
       "importFromGithub": "Import from GitHub URL",
       "githubUrlDesc": "Paste a GitHub URL pointing to a skill directory (must contain SKILL.md).",
@@ -351,7 +344,14 @@
       "importedSuccess": "Imported \"{{name}}\" ({{count}} files)",
       "importFailed": "Import failed",
       "importing": "Importing...",
-      "importBtn": "Import"
+      "importBtn": "Import",
+      "save": "Save",
+      "delete": "Delete",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "toolName": "Tool Name",
+      "enabled": "Enabled",
+      "disabled": "Disabled"
     },
     "toolMgmt": {
       "title": "Tool Management",
@@ -465,6 +465,30 @@
         "saveChannel": "Save Config",
         "syncHint": "Before configuring the Feishu bot, please sync your organization structure in Enterprise Settings → Org Structure first. This ensures the bot can identify message senders."
       },
+      "timezone": {
+        "label": "Timezone",
+        "description": "Set the timezone for scheduled tasks and time-based triggers",
+        "zones": {
+          "UTC": "UTC (Coordinated Universal Time)",
+          "Asia/Shanghai": "Asia/Shanghai (Beijing Time, UTC+8)",
+          "Asia/Tokyo": "Asia/Tokyo (Japan Time, UTC+9)",
+          "Asia/Seoul": "Asia/Seoul (Korea Time, UTC+9)",
+          "Asia/Singapore": "Asia/Singapore (Singapore Time, UTC+8)",
+          "Asia/Kolkata": "Asia/Kolkata (India Time, UTC+5:30)",
+          "Asia/Dubai": "Asia/Dubai (Gulf Time, UTC+4)",
+          "Europe/London": "Europe/London (UK Time, UTC+0/+1)",
+          "Europe/Paris": "Europe/Paris (Central European Time, UTC+1/+2)",
+          "Europe/Berlin": "Europe/Berlin (Central European Time, UTC+1/+2)",
+          "Europe/Moscow": "Europe/Moscow (Moscow Time, UTC+3)",
+          "America/New_York": "America/New_York (Eastern Time, UTC-5/-4)",
+          "America/Chicago": "America/Chicago (Central Time, UTC-6/-5)",
+          "America/Denver": "America/Denver (Mountain Time, UTC-7/-6)",
+          "America/Los_Angeles": "America/Los_Angeles (Pacific Time, UTC-8/-7)",
+          "America/Sao_Paulo": "America/Sao_Paulo (Brasilia Time, UTC-3)",
+          "Australia/Sydney": "Australia/Sydney (Australian Eastern Time, UTC+10/+11)",
+          "Pacific/Auckland": "Pacific/Auckland (New Zealand Time, UTC+12/+13)"
+        }
+      },
       "danger": {
         "title": "Danger Zone",
         "deleteAgent": "Delete Digital Employee",
@@ -496,30 +520,6 @@
         "useAccessDesc": "Task, Chat, Tools, Skills, Workspace",
         "manageAccess": "Manage",
         "manageAccessDesc": "Full access including Settings, Mind, Relationships"
-      },
-      "timezone": {
-        "label": "Timezone",
-        "description": "Set the timezone for scheduled tasks and time-based triggers",
-        "zones": {
-          "UTC": "UTC (Coordinated Universal Time)",
-          "Asia/Shanghai": "Asia/Shanghai (Beijing Time, UTC+8)",
-          "Asia/Tokyo": "Asia/Tokyo (Japan Time, UTC+9)",
-          "Asia/Seoul": "Asia/Seoul (Korea Time, UTC+9)",
-          "Asia/Singapore": "Asia/Singapore (Singapore Time, UTC+8)",
-          "Asia/Kolkata": "Asia/Kolkata (India Time, UTC+5:30)",
-          "Asia/Dubai": "Asia/Dubai (Gulf Time, UTC+4)",
-          "Europe/London": "Europe/London (UK Time, UTC+0/+1)",
-          "Europe/Paris": "Europe/Paris (Central European Time, UTC+1/+2)",
-          "Europe/Berlin": "Europe/Berlin (Central European Time, UTC+1/+2)",
-          "Europe/Moscow": "Europe/Moscow (Moscow Time, UTC+3)",
-          "America/New_York": "America/New_York (Eastern Time, UTC-5/-4)",
-          "America/Chicago": "America/Chicago (Central Time, UTC-6/-5)",
-          "America/Denver": "America/Denver (Mountain Time, UTC-7/-6)",
-          "America/Los_Angeles": "America/Los_Angeles (Pacific Time, UTC-8/-7)",
-          "America/Sao_Paulo": "America/Sao_Paulo (Brasilia Time, UTC-3)",
-          "Australia/Sydney": "Australia/Sydney (Australian Eastern Time, UTC+10/+11)",
-          "Pacific/Auckland": "Pacific/Auckland (New Zealand Time, UTC+12/+13)"
-        }
       },
       "approvals": {
         "title": "Approvals",
@@ -553,7 +553,7 @@
       "noInstalled": "No tools installed yet",
       "noCompany": "No company-configured tools",
       "configured": "Configured",
-      "config": "️ Config",
+      "config": "Config",
       "testConnection": "Test Connection",
       "testing": "Testing...",
       "testSuccessful": "Test successful",
@@ -605,42 +605,20 @@
       "task": "Task Management",
       "communication": "Communication",
       "search": "Search",
-      "custom": "Custom",
-      "general": "General",
-      "email": "Email",
       "aware": "Aware & Triggers",
       "social": "Social",
       "code": "Code & Execution",
       "discovery": "Discovery",
+      "email": "Email",
       "feishu": "Feishu / Lark",
+      "custom": "Custom",
+      "general": "General",
       "agentbay": "AgentBay"
     },
     "upload": {
       "success": "Upload successful",
       "failed": "Upload failed",
       "uploading": "Uploading..."
-    },
-    "skillNames": {
-      "web-research": "Web Research",
-      "data-analysis": "Data Analysis",
-      "content-writing": "Content Writing",
-      "competitive-analysis": "Competitive Analysis",
-      "meeting-notes": "Meeting Notes",
-      "complex-task-executor": "Complex Task Executor",
-      "skill-creator": "Skill Creator",
-      "content-research-writer": "Content Research Writer",
-      "mcp-installer": "MCP Tool Installer"
-    },
-    "skillDescriptions": {
-      "web-research": "Systematic web searching and information synthesis. Use when: needing factual data from the web, evaluating sources, or cross-referencing claims. NOT for: simple trivia or local file search.",
-      "data-analysis": "Data interpretation and structured reporting. Use when: analyzing CSV/dataset files, finding trends, or generating statistical summaries. NOT for: writing code to build data models.",
-      "content-writing": "Professional content creation and tone adaptation. Use when: drafting articles, emails, or marketing copy with specific stylistic requirements. NOT for: casual chat responses.",
-      "competitive-analysis": "Competitor research and comparison frameworks. Use when: asked to compare companies, products, or perform SWOT/feature matrix analysis. NOT for: general academic research.",
-      "meeting-notes": "Meeting summarization and follow-up tracking. Use when: given meeting transcripts or rough notes to extract structured action items and key decisions. NOT for: generic document summarization.",
-      "complex-task-executor": "Structured methodology for decomposing, planning, and executing complex multi-step tasks with progress tracking",
-      "skill-creator": "Create new skills, modify and improve existing skills, and measure skill performance",
-      "content-research-writer": "Assists in writing high-quality content by conducting research, adding citations, improving hooks, iterating on outlines, and providing real-time section feedback",
-      "mcp-installer": "Guide users through discovering, configuring, and installing MCP tools directly in chat — no Settings page required"
     },
     "credentials": {
       "title": "Credentials",
@@ -705,11 +683,33 @@
         "loginUrlPlaceholder": "https://example.com/login",
         "cookies": "Cookies JSON",
         "cookiesHint": "(leave empty to keep current)",
-        "cookiesPlaceholder": "[\n  { \"name\": \"session\", \"value\": \"abc123\", \"domain\": \".example.com\", \"path\": \"/\" }\n]",
+        "cookiesPlaceholder": "[\n { \"name\": \"session\", \"value\": \"abc123\", \"domain\": \".example.com\", \"path\": \"/\" }\n]",
         "cookiesHelp": "Paste cookies exported from",
         "cookiesHelpLink": "Cookie-Editor",
         "cookiesHelpSuffix": "or similar browser extension. Must be a JSON array."
       }
+    },
+    "skillNames": {
+      "web-research": "Web Research",
+      "data-analysis": "Data Analysis",
+      "content-writing": "Content Writing",
+      "competitive-analysis": "Competitive Analysis",
+      "meeting-notes": "Meeting Notes",
+      "complex-task-executor": "Complex Task Executor",
+      "skill-creator": "Skill Creator",
+      "content-research-writer": "Content Research Writer",
+      "mcp-installer": "MCP Tool Installer"
+    },
+    "skillDescriptions": {
+      "web-research": "Systematic web searching and information synthesis. Use when: needing factual data from the web, evaluating sources, or cross-referencing claims. NOT for: simple trivia or local file search.",
+      "data-analysis": "Data interpretation and structured reporting. Use when: analyzing CSV/dataset files, finding trends, or generating statistical summaries. NOT for: writing code to build data models.",
+      "content-writing": "Professional content creation and tone adaptation. Use when: drafting articles, emails, or marketing copy with specific stylistic requirements. NOT for: casual chat responses.",
+      "competitive-analysis": "Competitor research and comparison frameworks. Use when: asked to compare companies, products, or perform SWOT/feature matrix analysis. NOT for: general academic research.",
+      "meeting-notes": "Meeting summarization and follow-up tracking. Use when: given meeting transcripts or rough notes to extract structured action items and key decisions. NOT for: generic document summarization.",
+      "complex-task-executor": "Structured methodology for decomposing, planning, and executing complex multi-step tasks with progress tracking",
+      "skill-creator": "Create new skills, modify and improve existing skills, and measure skill performance",
+      "content-research-writer": "Assists in writing high-quality content by conducting research, adding citations, improving hooks, iterating on outlines, and providing real-time section feedback",
+      "mcp-installer": "Guide users through discovering, configuring, and installing MCP tools directly in chat — no Settings page required"
     }
   },
   "wizard": {
@@ -738,6 +738,34 @@
       "unlimited": "Unlimited",
       "namePlaceholder": "e.g. Smart Assistant",
       "importFromJson": "Import from JSON"
+    },
+    "templates": {
+      "Project Manager": "Project Manager",
+      "Designer": "Designer",
+      "Product Intern": "Product Intern",
+      "Market Researcher": "Market Researcher",
+      "templateData": {
+        "Project Manager": {
+          "description": "Manages project timelines, task delegation, cross-team coordination, and progress reporting",
+          "personality": "- Organized, proactive, and detail-oriented\n- Strong communicator who keeps all stakeholders aligned\n- Balances urgency with quality, prioritizes ruthlessly",
+          "boundaries": "- Strategic decisions require leadership approval\n- Budget approvals must follow formal process\n- External communications on behalf of the company need sign-off"
+        },
+        "Designer": {
+          "description": "Assists with design requirements, design system maintenance, asset management, and competitive UI analysis",
+          "personality": "- Detail-oriented with strong visual aesthetics\n- Translates business requirements into design language\n- Proactively organizes design resources and maintains consistency",
+          "boundaries": "- Final design deliverables require design lead approval\n- Brand element modifications must go through review\n- Design source file management follows team conventions"
+        },
+        "Product Intern": {
+          "description": "Supports product managers with requirements analysis, competitive research, user feedback analysis, and documentation",
+          "personality": "- Eager learner, proactive, and inquisitive\n- Sensitive to user experience and product details\n- Thorough and well-structured in output",
+          "boundaries": "- Product recommendations should be labeled \"for reference only\"\n- Does not directly modify product specs without PM approval\n- User privacy data must be anonymized"
+        },
+        "Market Researcher": {
+          "description": "Focuses on market research, industry analysis, competitive intelligence tracking, and trend insights",
+          "personality": "- Rigorous, data-driven, and logically clear\n- Extracts key insights from complex data sets\n- Reports focus on actionable recommendations, not just data",
+          "boundaries": "- Analysis conclusions must be supported by data/sources\n- Commercially sensitive information must be labeled with confidentiality level\n- External research reports require approval before distribution"
+        }
+      }
     },
     "step2": {
       "title": "Personality & Boundaries",
@@ -798,7 +826,10 @@
           "name": "MCP Tool Installer",
           "description": "Guide users through discovering, configuring, and installing MCP tools directly in chat — no Settings page required"
         }
-      }
+      },
+      "importBtn": "Import",
+      "importing": "Importing...",
+      "importedSuccess": "Successfully imported {{name}} ({{count}} files)"
     },
     "step4": {
       "title": "Permissions",
@@ -837,34 +868,6 @@
       "roleDescTooLong": "Role description cannot exceed 500 characters (current: {{count}})",
       "tokenLimitInvalid": "Please enter a valid positive integer",
       "modelRequired": "Please select a primary model"
-    },
-    "templates": {
-      "Project Manager": "Project Manager",
-      "Designer": "Designer",
-      "Product Intern": "Product Intern",
-      "Market Researcher": "Market Researcher",
-      "templateData": {
-        "Project Manager": {
-          "description": "Manages project timelines, task delegation, cross-team coordination, and progress reporting",
-          "personality": "- Organized, proactive, and detail-oriented\n- Strong communicator who keeps all stakeholders aligned\n- Balances urgency with quality, prioritizes ruthlessly",
-          "boundaries": "- Strategic decisions require leadership approval\n- Budget approvals must follow formal process\n- External communications on behalf of the company need sign-off"
-        },
-        "Designer": {
-          "description": "Assists with design requirements, design system maintenance, asset management, and competitive UI analysis",
-          "personality": "- Detail-oriented with strong visual aesthetics\n- Translates business requirements into design language\n- Proactively organizes design resources and maintains consistency",
-          "boundaries": "- Final design deliverables require design lead approval\n- Brand element modifications must go through review\n- Design source file management follows team conventions"
-        },
-        "Product Intern": {
-          "description": "Supports product managers with requirements analysis, competitive research, user feedback analysis, and documentation",
-          "personality": "- Eager learner, proactive, and inquisitive\n- Sensitive to user experience and product details\n- Thorough and well-structured in output",
-          "boundaries": "- Product recommendations should be labeled \"for reference only\"\n- Does not directly modify product specs without PM approval\n- User privacy data must be anonymized"
-        },
-        "Market Researcher": {
-          "description": "Focuses on market research, industry analysis, competitive intelligence tracking, and trend insights",
-          "personality": "- Rigorous, data-driven, and logically clear\n- Extracts key insights from complex data sets\n- Reports focus on actionable recommendations, not just data",
-          "boundaries": "- Analysis conclusions must be supported by data/sources\n- Commercially sensitive information must be labeled with confidentiality level\n- External research reports require approval before distribution"
-        }
-      }
     }
   },
   "task": {
@@ -896,6 +899,9 @@
   },
   "enterprise": {
     "title": "Company Settings",
+    "dangerZone": "Danger Zone",
+    "deleteCompanyDesc": "Permanently delete this company and all its data, including agents, models, tools, and skills. This action cannot be undone.",
+    "deleteCompany": "Delete this company",
     "tabs": {
       "llm": "Models",
       "tools": "Tools",
@@ -943,6 +949,22 @@
       "hint": "For Gmail, use an App Password. For QQ/163 mail, use the SMTP authorization code.",
       "sendTest": "Send Test Email"
     },
+    "emailTemplates": {
+      "title": "Email Templates",
+      "description": "Customize email content for each scenario. Use {{variable}} placeholders to insert dynamic data.",
+      "saveTemplates": "Save Templates",
+      "availableVars": "Available Variables",
+      "subject": "Subject",
+      "body": "Body",
+      "resetDefault": "Reset to Default",
+      "saved": "Email templates saved",
+      "emailVerification": "Email Verification Code",
+      "emailVerificationDesc": "Sent when a user registers and needs to verify their email address.",
+      "passwordReset": "Password Reset",
+      "passwordResetDesc": "Sent when a user requests to reset their password.",
+      "companyInvitation": "Company Invitation",
+      "companyInvitationDesc": "Sent when an admin invites a user to join their company."
+    },
     "quotas": {
       "defaultUserQuotas": "Default User Quotas",
       "defaultsApply": "These defaults apply to newly registered users. Existing users are not affected.",
@@ -976,8 +998,34 @@
       "users": "{{count}} users",
       "runningAgents": "{{running}}/{{total}} running"
     },
+    "timezone": {
+      "title": "Company Timezone",
+      "description": "Default timezone for all agents. Agents can override individually.",
+      "zones": {
+        "UTC": "UTC (Coordinated Universal Time)",
+        "Asia/Shanghai": "Asia/Shanghai (Beijing Time, UTC+8)",
+        "Asia/Tokyo": "Asia/Tokyo (Japan Time, UTC+9)",
+        "Asia/Seoul": "Asia/Seoul (Korea Time, UTC+9)",
+        "Asia/Singapore": "Asia/Singapore (Singapore Time, UTC+8)",
+        "Asia/Kolkata": "Asia/Kolkata (India Time, UTC+5:30)",
+        "Asia/Dubai": "Asia/Dubai (Gulf Time, UTC+4)",
+        "Europe/London": "Europe/London (UK Time, UTC+0/+1)",
+        "Europe/Paris": "Europe/Paris (Central European Time, UTC+1/+2)",
+        "Europe/Berlin": "Europe/Berlin (Central European Time, UTC+1/+2)",
+        "Europe/Moscow": "Europe/Moscow (Moscow Time, UTC+3)",
+        "America/New_York": "America/New_York (Eastern Time, UTC-5/-4)",
+        "America/Chicago": "America/Chicago (Central Time, UTC-6/-5)",
+        "America/Denver": "America/Denver (Mountain Time, UTC-7/-6)",
+        "America/Los_Angeles": "America/Los_Angeles (Pacific Time, UTC-8/-7)",
+        "America/Sao_Paulo": "America/Sao_Paulo (Brasilia Time, UTC-3)",
+        "Australia/Sydney": "Australia/Sydney (Australian Eastern Time, UTC+10/+11)",
+        "Pacific/Auckland": "Pacific/Auckland (New Zealand Time, UTC+12/+13)"
+      }
+    },
     "llm": {
       "addModel": "Add Model",
+      "editModel": "Edit Model",
+      "vision": "Vision",
       "noModels": "No data",
       "provider": "Provider",
       "model": "Model",
@@ -994,24 +1042,42 @@
       "requestTimeout": "Request Timeout (s)",
       "requestTimeoutPlaceholder": "Leave empty for 120s default (300+ recommended for local models)",
       "requestTimeoutDesc": "Override total HTTP timeout per request. Increase this for local models that are slow to generate.",
+      "temperature": "Temperature",
+      "temperaturePlaceholder": "e.g. 0.7 or 1.0 (Leave empty for default)",
+      "temperatureDesc": "Leave empty to use the provider default. o1/o3 reasoning models usually require 1.0",
       "enabled": "Enabled",
       "disabled": "Disabled",
       "save": "Save",
       "delete": "Delete",
       "edit": "Edit",
       "cancel": "Cancel",
-      "supportsVision": "👁 Supports Vision (Multimodal)",
+      "supportsVision": "Supports Vision (Multimodal)",
       "supportsVisionDesc": "— Enable for models that can analyze images (GPT-4o, Claude, Qwen-VL, etc.)",
       "test": "Test",
       "testing": "Testing...",
       "testSuccess": "OK ({{latency}}ms)",
       "testFailed": "Test failed: {{error}}\n\nLatency: {{latency}}ms",
-      "testError": "Test error: {{message}}",
-      "editModel": "Edit Model",
-      "vision": "Vision",
-      "temperature": "Temperature",
-      "temperaturePlaceholder": "e.g. 0.7 or 1.0 (Leave empty for default)",
-      "temperatureDesc": "Leave empty to use the provider default. o1/o3 reasoning models usually require 1.0"
+      "testError": "Test error: {{message}}"
+    },
+    "users": {
+      "user": "User",
+      "email": "Email",
+      "joined": "Joined",
+      "role": "Role",
+      "source": "Source",
+      "msgQuota": "Msg Quota",
+      "period": "Period",
+      "agents": "Agents",
+      "ttl": "TTL",
+      "edit": "Edit",
+      "clickToSort": "Click to toggle sort order",
+      "platformAdmin": "Platform\nAdmin",
+      "orgAdmin": "Admin",
+      "registered": "Registered",
+      "permanent": "Permanent",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
     },
     "tools": {
       "title": "Global Tool Management",
@@ -1260,6 +1326,15 @@
       "send": "Send Broadcast",
       "sentWithEmail": "Sent to {{users}} users, {{agents}} agents, and {{emails}} email recipients"
     },
+    "companyName": {
+      "title": "Company Name",
+      "placeholder": "Enter company name"
+    },
+    "companyIntro": {
+      "title": "Company Intro",
+      "description": "Describe your company's mission, products, and culture. This information will be included as context in every Agent conversation.",
+      "hint": "This content will appear in every Agent's system prompt"
+    },
     "kb": {
       "title": "Company Knowledge Base",
       "rootDir": "Root",
@@ -1291,29 +1366,21 @@
       "title": "Notification Bar",
       "enabled": "Enable notification bar",
       "text": "Notification text",
-      "textPlaceholder": "e.g. 🎉 v2.1 released with new features!",
+      "textPlaceholder": "e.g. v2.1 released with new features!",
       "description": "Display a notification bar at the top of the page, visible to all users.",
       "preview": "Preview"
     },
     "identity": {
       "title": "Organization & Directory Sync",
+      "description": "Configure enterprise directory synchronization and Identity Provider settings.",
+      "notConfigured": "Not configured",
+      "active": "Active",
       "addProvider": "Add Directory Provider",
       "type": "Type",
       "name": "Display Name",
       "config": "Configuration (JSON)",
       "configExample": "Configuration Example",
       "deleteConfirm": "Are you sure you want to delete this OA provider?",
-      "providerHints": {
-        "feishu": "Feishu: Requires app_id, app_secret. Optional: encrypt_key, verification_token.",
-        "dingtalk": "DingTalk: Requires app_key, app_secret.",
-        "wecom": "WeCom: Requires corp_id, secret, agent_id.",
-        "oauth2": "OAuth2: Enter App ID, App Secret, Authorize URL, Token URL, User Info URL",
-        "saml": "SAML: Requires entry_point, issuer, cert (public key).",
-        "microsoft_teams": "Microsoft Teams: Requires client_id, client_secret, tenant_id."
-      },
-      "description": "Configure enterprise directory synchronization and Identity Provider settings.",
-      "notConfigured": "Not configured",
-      "active": "Active",
       "providers": {
         "feishu": {
           "name": "Feishu",
@@ -1331,6 +1398,14 @@
           "name": "OAuth2",
           "desc": "Generic OIDC Provider"
         }
+      },
+      "providerHints": {
+        "feishu": "Feishu: Requires app_id, app_secret. Optional: encrypt_key, verification_token.",
+        "dingtalk": "DingTalk: Requires app_key, app_secret.",
+        "wecom": "WeCom: Requires corp_id, secret, agent_id.",
+        "oauth2": "OAuth2: Enter App ID, App Secret, Authorize URL, Token URL, User Info URL",
+        "saml": "SAML: Requires entry_point, issuer, cert (public key).",
+        "microsoft_teams": "Microsoft Teams: Requires client_id, client_secret, tenant_id."
       },
       "ssoLoginToggle": "SSO Login",
       "ssoLoginToggleHint": "Allow users to log in via this identity provider.",
@@ -1350,84 +1425,6 @@
       "botSecret": "Bot Secret",
       "appKey": "App Key",
       "appSecret": "App Secret"
-    },
-    "dangerZone": "️ Danger Zone",
-    "deleteCompanyDesc": "Permanently delete this company and all its data, including agents, models, tools, and skills. This action cannot be undone.",
-    "deleteCompany": "Delete this company",
-    "emailTemplates": {
-      "title": "Email Templates",
-      "description": "Customize email content for each scenario. Use {{variable}} placeholders to insert dynamic data.",
-      "saveTemplates": "Save Templates",
-      "availableVars": "Available Variables",
-      "subject": "Subject",
-      "body": "Body",
-      "resetDefault": "Reset to Default",
-      "saved": "Email templates saved",
-      "emailVerification": "Email Verification Code",
-      "emailVerificationDesc": "Sent when a user registers and needs to verify their email address.",
-      "emailVerificationSubject": "Verify your Clawith email address",
-      "emailVerificationBody": "Hello {{display_name}},\n\nWelcome to Clawith! Please use the following 6-digit code to verify your email address:\n\nVerification code: {{verification_code}}\n\nThis code expires in {{expiry_minutes}} minutes. If you did not create an account, you can ignore this email.",
-      "passwordReset": "Password Reset",
-      "passwordResetDesc": "Sent when a user requests to reset their password.",
-      "passwordResetSubject": "Reset your Clawith password",
-      "passwordResetBody": "Hello {{display_name}},\n\nWe received a request to reset your Clawith password.\n\nReset link: {{reset_url}}\n\nThis link expires in {{expiry_minutes}} minutes. If you did not request this, you can ignore this email.",
-      "companyInvitation": "Company Invitation",
-      "companyInvitationDesc": "Sent when an admin invites a user to join their company.",
-      "companyInvitationSubject": "{{inviter_name}} invited you to join {{company_name}} on Clawith",
-      "companyInvitationBody": "Hello,\n\n{{inviter_name}} has invited you to join their team '{{company_name}}' on Clawith.\n\nTo accept the invitation and create your account, please click the link below:\n\n{{invite_url}}\n\nIf you don't want to join this team or didn't expect this invitation, you can ignore this email."
-    },
-    "timezone": {
-      "title": "Company Timezone",
-      "description": "Default timezone for all agents. Agents can override individually.",
-      "zones": {
-        "UTC": "UTC (Coordinated Universal Time)",
-        "Asia/Shanghai": "Asia/Shanghai (Beijing Time, UTC+8)",
-        "Asia/Tokyo": "Asia/Tokyo (Japan Time, UTC+9)",
-        "Asia/Seoul": "Asia/Seoul (Korea Time, UTC+9)",
-        "Asia/Singapore": "Asia/Singapore (Singapore Time, UTC+8)",
-        "Asia/Kolkata": "Asia/Kolkata (India Time, UTC+5:30)",
-        "Asia/Dubai": "Asia/Dubai (Gulf Time, UTC+4)",
-        "Europe/London": "Europe/London (UK Time, UTC+0/+1)",
-        "Europe/Paris": "Europe/Paris (Central European Time, UTC+1/+2)",
-        "Europe/Berlin": "Europe/Berlin (Central European Time, UTC+1/+2)",
-        "Europe/Moscow": "Europe/Moscow (Moscow Time, UTC+3)",
-        "America/New_York": "America/New_York (Eastern Time, UTC-5/-4)",
-        "America/Chicago": "America/Chicago (Central Time, UTC-6/-5)",
-        "America/Denver": "America/Denver (Mountain Time, UTC-7/-6)",
-        "America/Los_Angeles": "America/Los_Angeles (Pacific Time, UTC-8/-7)",
-        "America/Sao_Paulo": "America/Sao_Paulo (Brasilia Time, UTC-3)",
-        "Australia/Sydney": "Australia/Sydney (Australian Eastern Time, UTC+10/+11)",
-        "Pacific/Auckland": "Pacific/Auckland (New Zealand Time, UTC+12/+13)"
-      }
-    },
-    "users": {
-      "user": "User",
-      "email": "Email",
-      "joined": "Joined",
-      "role": "Role",
-      "source": "Source",
-      "msgQuota": "Msg Quota",
-      "period": "Period",
-      "agents": "Agents",
-      "ttl": "TTL",
-      "edit": "Edit",
-      "clickToSort": "Click to toggle sort order",
-      "platformAdmin": "Platform\nAdmin",
-      "orgAdmin": "Admin",
-      "registered": "Registered",
-      "permanent": "Permanent",
-      "daily": "Daily",
-      "weekly": "Weekly",
-      "monthly": "Monthly"
-    },
-    "companyName": {
-      "title": "Company Name",
-      "placeholder": "Enter company name"
-    },
-    "companyIntro": {
-      "title": "Company Intro",
-      "description": "Describe your company's mission, products, and culture. This information will be included as context in every Agent conversation.",
-      "hint": "This content will appear in every Agent's system prompt"
     }
   },
   "common": {
@@ -1437,6 +1434,7 @@
     "confirm": "Confirm",
     "delete": "Delete",
     "search": "Search",
+    "searching": "Searching...",
     "loading": "Loading...",
     "noData": "No data",
     "error": "Error",
@@ -1448,16 +1446,7 @@
     "all": "All",
     "none": "None",
     "download": "Download",
-    "channels": {
-      "feishu": "Feishu",
-      "discord": "Discord",
-      "slack": "Slack",
-      "teams": "Microsoft Teams",
-      "dingtalk": "DingTalk",
-      "wecom": "WeCom"
-    },
-    "searching": "Searching...",
-    "upload": "⬆ Upload",
+    "upload": "Upload",
     "apply": "Apply",
     "reset": "Reset",
     "copy": "Copy",
@@ -1466,114 +1455,15 @@
     "darkMode": "Dark Mode",
     "collapseSidebar": "Collapse Sidebar",
     "expandSidebar": "Expand Sidebar",
+    "channels": {
+      "feishu": "Feishu",
+      "discord": "Discord",
+      "slack": "Slack",
+      "teams": "Microsoft Teams",
+      "dingtalk": "DingTalk",
+      "wecom": "WeCom"
+    },
     "deleting": "Deleting..."
-  },
-  "openclaw": {
-    "created": "OpenClaw Agent Created",
-    "createdDesc2": "Your OpenClaw agent has been registered. Copy the instruction below and send it to your OpenClaw agent to complete the setup.",
-    "setupInstruction": "Setup Instruction",
-    "setupInstructionDesc": "Copy and send this to your OpenClaw agent. It will configure itself automatically.",
-    "keyNote": "This key is already embedded in the instruction above. Save it separately if needed for manual configuration.",
-    "goToAgent": "Go to Agent Page",
-    "lastSeen": "Last Seen",
-    "notConnected": "Not connected",
-    "connection": "OpenClaw Connection",
-    "type": "Type",
-    "never": "Never",
-    "model": "Model",
-    "managedBy": "Managed by OpenClaw"
-  },
-  "channelGuide": {
-    "setupGuide": "Setup Guide",
-    "feishuPermJson": "Permission JSON (bulk import)",
-    "feishuPermBasic": "Basic",
-    "feishuPermFull": "Full",
-    "feishuPermBasicDesc": "Chat & messaging only",
-    "feishuPermFullDesc": "Includes Docs, Drive, Bitable, Calendar, Approval",
-    "feishuPermCopy": "Copy",
-    "feishuPermCopied": "✓ Copied",
-    "slack": {
-      "step1": "Go to api.slack.com/apps → click Create New App → choose From Scratch → enter an app name and pick your workspace → click Create App",
-      "step2": "In the left sidebar, click OAuth & Permissions → scroll down to Scopes → under Bot Token Scopes click Add an OAuth Scope → add: chat:write, im:history, app_mentions:read",
-      "step3": "Scroll back to the top of OAuth & Permissions → click Install to Workspace → click Allow → copy the Bot User OAuth Token (starts with xoxb-)",
-      "step4": "Left sidebar → Basic Information → scroll to App Credentials → click Show next to Signing Secret → copy it",
-      "step5": "Paste the Bot Token and Signing Secret above → click Save Config → copy the Webhook URL that appears",
-      "step6": "Left sidebar → Event Subscriptions → toggle Enable Events ON → paste the Webhook URL into the Request URL field (it will say Verified ✓) → under Subscribe to bot events, click Add Bot User Event and add: app_mention, message.im → click Save Changes",
-      "step7": "A yellow banner will appear at the top: click reinstall your app and authorize again",
-      "step8": "Now open a DM with your bot in Slack and send a message to test it",
-      "note": "Your server must be publicly accessible on the internet so Slack can reach the Webhook URL."
-    },
-    "discord": {
-      "step1": "Go to discord.com/developers/applications → click New Application → enter a name → click Create",
-      "step2": "Left sidebar → Bot → click Reset Token → confirm → copy the Bot Token. Also enable Message Content Intent under Privileged Gateway Intents → Save Changes",
-      "step3": "Left sidebar → General Information → copy Application ID and Public Key",
-      "step4": "Left sidebar → OAuth2 → URL Generator → under Scopes check bot and applications.commands → under Bot Permissions check Send Messages and Read Message History → copy the generated URL → paste it in your browser → select your server → Authorize",
-      "step5": "Fill in Application ID, Bot Token, and Public Key above → click Save Config → copy the Webhook URL (Interactions Endpoint URL)",
-      "step6": "Left sidebar → General Information → paste the Webhook URL into the Interactions Endpoint URL field → click Save Changes (Discord will automatically verify the endpoint)",
-      "step7": "In your Discord server, type /ask message: <your question> to talk to the agent",
-      "note": "Discord verifies the endpoint immediately when you save, so your server must be running and publicly reachable at that moment.",
-      "ws_step1": "Go to discord.com/developers/applications → click New Application → enter a name → click Create",
-      "ws_step2": "Left sidebar → Bot → click Reset Token → copy the Bot Token. Enable Message Content Intent under Privileged Gateway Intents → Save Changes",
-      "ws_step3": "Left sidebar → OAuth2 → URL Generator → under Scopes check bot → under Bot Permissions check Send Messages and Read Message History → copy the generated URL → paste in browser → select your server → Authorize",
-      "ws_step4": "Paste the Bot Token above → click Save Config. The bot will connect via Gateway automatically — no public URL needed",
-      "ws_note": "Gateway mode requires no public IP or callback URL. The bot connects outbound to Discord. Users can @mention or DM the bot to chat."
-    },
-    "feishu": {
-      "step1": "Go to open.feishu.cn → log in → click Developer Console (开发者后台) → Create Enterprise Self-Built App (创建企业自建应用) → fill in name and description → Confirm",
-      "step2": "In the app page, left sidebar → Add App Capabilities (添加应用能力) → click Add (添加) next to Bot (机器人)",
-      "step3": "Left sidebar → Credentials & Basic Info (凭证与基础信息) → copy App ID and App Secret",
-      "step4": "Paste App ID and App Secret above → click Save Config → copy the Webhook URL that appears",
-      "step5": "Left sidebar → Events & Callbacks (事件与回调) → Event Config tab → Edit Subscription Mode → select 'Send events to developer server' → paste Webhook URL into the Request URL field → Save (auto-verifies) → click Add Event → search and add im.message.receive_v1 → Save",
-      "step6": "Left sidebar → Permissions & Scopes → click 'Bulk Import/Export Permissions' → paste the permission JSON below → confirm import",
-      "step7": "Left sidebar → App Release (版本管理与发布) → Create Version → fill in description → click Release for Review → for internal apps, you can approve it yourself in the admin console",
-      "step8": "After publishing, invite the bot to a Feishu group or have users add it as a direct contact to start chatting",
-      "note": "For internal company apps, the review is usually instant. You must re-publish the app each time you add new permissions.",
-      "ws_step1": "Go to open.feishu.cn → log in → Developer Console → Create Enterprise Self-Built App → fill in name and description → Confirm",
-      "ws_step2": "Left sidebar → Add App Capabilities → click Add next to Bot",
-      "ws_step3": "Left sidebar → Credentials & Basic Info → copy App ID and App Secret",
-      "ws_step4": "Select Long Connection (WebSocket) mode above → paste App ID and App Secret → click Save Config",
-      "ws_step5": "Left sidebar → Events & Callbacks → Event Configuration → edit Subscription Method → select 'Use Long Connection to receive events' → click Add Event → search and add im.message.receive_v1 (Receive Messages v2.0) → approve required permissions → Save",
-      "ws_step6": "Left sidebar → Permissions & Scopes → click Bulk Import/Export Permissions → paste the permission JSON below → confirm import",
-      "ws_step7": "Left sidebar → App Release → Create Version → Release for Review → approve it in the admin console",
-      "ws_step8": "After publishing, invite the bot to a Feishu group or add it as a direct contact to start chatting",
-      "ws_note": "WebSocket mode requires no public IP or callback URL. The connection is managed automatically."
-    },
-    "teams": {
-      "step1": "Go to portal.azure.com → Azure Active Directory → App registrations → New registration → enter name → select 'Accounts in this organizational directory only' (single-tenant) → Register",
-      "step2": "In the app overview page, copy the Application (client) ID and save it. Then go to Certificates & secrets → New client secret → add description and expiration → copy the Value (this is your App Secret). Also copy your Directory (tenant) ID from the Overview page.",
-      "step3": "For local testing: Start a localtunnel to expose your backend: `npx --yes localtunnel --port 8000` → copy the tunnel URL (e.g., https://xxxxx.loca.lt). When configuring the Messaging Endpoint URL in Azure Bot, replace 'localhost' with your localtunnel URL.",
-      "step4": "Paste App ID (Client ID), App Secret (Client Secret), and Tenant ID (Directory ID) above. Click Save Config → copy the Messaging Endpoint URL that appears.",
-      "step5": "In Azure Bot → Channels → Microsoft Teams → Configure → paste the Messaging Endpoint URL (use your localtunnel URL instead of localhost if testing locally) → Save → the bot will be available in Teams.",
-      "note": "Your server must be publicly accessible on the internet so Microsoft Teams can reach the Messaging Endpoint URL. For local testing, use localtunnel and replace 'localhost' with your tunnel URL.",
-      "tenantId": "Tenant ID (Directory ID)",
-      "tenantIdPlaceholder": "Enter your tenant ID (Directory ID) for this single-tenant app",
-      "tenantIdHint": "Required for single-tenant apps. Get it from Azure AD → App registrations → your app → Overview."
-    },
-    "dingtalk": {
-      "step1": "Go to open.dingtalk.com → log in → go to App Development → Create Internal App → enter a name",
-      "step2": "In the app page → Add Capabilities → find Bot → click Add",
-      "step3": "In the app info page → copy AppKey and AppSecret",
-      "step4": "Set message receiving mode to Stream (recommended, no public IP needed)",
-      "step5": "Paste AppKey and AppSecret above → click Save Config",
-      "step6": "Publish the app → find the bot in DingTalk and send a test message",
-      "note": "Stream mode requires no public IP or callback URL. Only AppKey and AppSecret are needed."
-    },
-    "wecom": {
-      "step1": "Log in to work.weixin.qq.com → App Management → Self-Built Apps → Create App",
-      "step2": "In the app details page → copy CorpID, AgentID, and Secret",
-      "step3": "Set up API message receiving → set Token and EncodingAESKey (can be auto-generated)",
-      "step4": "Fill in the info above → click Save Config → copy the Webhook URL that appears",
-      "step5": "Paste the Webhook URL into WeCom's API Receive Message URL field → Save",
-      "step6": "Find the app in WeCom and send a test message",
-      "note": "The callback URL must be publicly accessible. WeCom will verify the URL and send encrypted messages.",
-      "ws_step1": "Log in to work.weixin.qq.com → Security & Management → Management Tools → Intelligent Bots",
-      "ws_step2": "Click Create Bot → select Manual Creation → choose API Mode at the bottom",
-      "ws_step3": "Select 'Long Connection' as the connection method (not URL callback)",
-      "ws_step4": "Fill in bot name, avatar, and set visible scope → Save",
-      "ws_step5": "Copy the Bot ID and Secret that are generated → paste them above → click Save Config",
-      "ws_step6": "Find the bot in WeCom and send a test message",
-      "ws_note": "WebSocket mode requires no public IP, callback URL, or domain verification (ICP). The connection is managed automatically."
-    }
   },
   "platformDashboard": {
     "timeRange": {
@@ -1651,6 +1541,113 @@
     "loading": "Loading...",
     "noData": "No data"
   },
+  "openclaw": {
+    "created": "OpenClaw Agent Created",
+    "createdDesc2": "Your OpenClaw agent has been registered. Copy the instruction below and send it to your OpenClaw agent to complete the setup.",
+    "setupInstruction": "Setup Instruction",
+    "setupInstructionDesc": "Copy and send this to your OpenClaw agent. It will configure itself automatically.",
+    "keyNote": "This key is already embedded in the instruction above. Save it separately if needed for manual configuration.",
+    "goToAgent": "Go to Agent Page",
+    "lastSeen": "Last Seen",
+    "notConnected": "Not connected",
+    "connection": "OpenClaw Connection",
+    "type": "Type",
+    "never": "Never",
+    "model": "Model",
+    "managedBy": "Managed by OpenClaw"
+  },
+  "channelGuide": {
+    "setupGuide": "Setup Guide",
+    "feishuPermJson": "Permission JSON (bulk import)",
+    "feishuPermBasic": "Basic",
+    "feishuPermFull": "Full",
+    "feishuPermBasicDesc": "Chat & messaging only",
+    "feishuPermFullDesc": "Includes Docs, Drive, Bitable, Calendar, Approval",
+    "feishuPermCopy": "Copy",
+    "feishuPermCopied": "Copied",
+    "slack": {
+      "step1": "Go to api.slack.com/apps → click Create New App → choose From Scratch → enter an app name and pick your workspace → click Create App",
+      "step2": "In the left sidebar, click OAuth & Permissions → scroll down to Scopes → under Bot Token Scopes click Add an OAuth Scope → add: chat:write, im:history, app_mentions:read",
+      "step3": "Scroll back to the top of OAuth & Permissions → click Install to Workspace → click Allow → copy the Bot User OAuth Token (starts with xoxb-)",
+      "step4": "Left sidebar → Basic Information → scroll to App Credentials → click Show next to Signing Secret → copy it",
+      "step5": "Paste the Bot Token and Signing Secret above → click Save Config → copy the Webhook URL that appears",
+      "step6": "Left sidebar → Event Subscriptions → toggle Enable Events ON → paste the Webhook URL into the Request URL field (it will say Verified ) → under Subscribe to bot events, click Add Bot User Event and add: app_mention, message.im → click Save Changes",
+      "step7": "A yellow banner will appear at the top: click reinstall your app and authorize again",
+      "step8": "Now open a DM with your bot in Slack and send a message to test it",
+      "note": "Your server must be publicly accessible on the internet so Slack can reach the Webhook URL."
+    },
+    "discord": {
+      "step1": "Go to discord.com/developers/applications → click New Application → enter a name → click Create",
+      "step2": "Left sidebar → Bot → click Reset Token → confirm → copy the Bot Token. Also enable Message Content Intent under Privileged Gateway Intents → Save Changes",
+      "step3": "Left sidebar → General Information → copy Application ID and Public Key",
+      "step4": "Left sidebar → OAuth2 → URL Generator → under Scopes check bot and applications.commands → under Bot Permissions check Send Messages and Read Message History → copy the generated URL → paste it in your browser → select your server → Authorize",
+      "step5": "Fill in Application ID, Bot Token, and Public Key above → click Save Config → copy the Webhook URL (Interactions Endpoint URL)",
+      "step6": "Left sidebar → General Information → paste the Webhook URL into the Interactions Endpoint URL field → click Save Changes (Discord will automatically verify the endpoint)",
+      "step7": "In your Discord server, type /ask message: <your question> to talk to the agent",
+      "note": "Discord verifies the endpoint immediately when you save, so your server must be running and publicly reachable at that moment.",
+      "ws_step1": "Go to discord.com/developers/applications → click New Application → enter a name → click Create",
+      "ws_step2": "Left sidebar → Bot → click Reset Token → copy the Bot Token. Enable Message Content Intent under Privileged Gateway Intents → Save Changes",
+      "ws_step3": "Left sidebar → OAuth2 → URL Generator → under Scopes check bot → under Bot Permissions check Send Messages and Read Message History → copy the generated URL → paste in browser → select your server → Authorize",
+      "ws_step4": "Paste the Bot Token above → click Save Config. The bot will connect via Gateway automatically — no public URL needed",
+      "ws_note": "Gateway mode requires no public IP or callback URL. The bot connects outbound to Discord. Users can @mention or DM the bot to chat."
+    },
+    "feishu": {
+      "step1": "Go to open.feishu.cn → log in → click Developer Console (开发者后台) → Create Enterprise Self-Built App (创建企业自建应用) → fill in name and description → Confirm",
+      "step2": "In the app page, left sidebar → Add App Capabilities (添加应用能力) → click Add (添加) next to Bot (机器人)",
+      "step3": "Left sidebar → Credentials & Basic Info (凭证与基础信息) → copy App ID and App Secret",
+      "step4": "Paste App ID and App Secret above → click Save Config → copy the Webhook URL that appears",
+      "step5": "Left sidebar → Events & Callbacks (事件与回调) → Event Config tab → Edit Subscription Mode → select 'Send events to developer server' → paste Webhook URL into the Request URL field → Save (auto-verifies) → click Add Event → search and add im.message.receive_v1 → Save",
+      "step6": "Left sidebar → Permissions & Scopes → click 'Bulk Import/Export Permissions' → paste the permission JSON below → confirm import",
+      "step7": "Left sidebar → App Release (版本管理与发布) → Create Version → fill in description → click Release for Review → for internal apps, you can approve it yourself in the admin console",
+      "step8": "After publishing, invite the bot to a Feishu group or have users add it as a direct contact to start chatting",
+      "note": "For internal company apps, the review is usually instant. You must re-publish the app each time you add new permissions.",
+      "ws_step1": "Go to open.feishu.cn → log in → Developer Console → Create Enterprise Self-Built App → fill in name and description → Confirm",
+      "ws_step2": "Left sidebar → Add App Capabilities → click Add next to Bot",
+      "ws_step3": "Left sidebar → Credentials & Basic Info → copy App ID and App Secret",
+      "ws_step4": "Select Long Connection (WebSocket) mode above → paste App ID and App Secret → click Save Config",
+      "ws_step5": "Left sidebar → Events & Callbacks → Event Configuration → edit Subscription Method → select 'Use Long Connection to receive events' → click Add Event → search and add im.message.receive_v1 (Receive Messages v2.0) → approve required permissions → Save",
+      "ws_step6": "Left sidebar → Permissions & Scopes → click Bulk Import/Export Permissions → paste the permission JSON below → confirm import",
+      "ws_step7": "Left sidebar → App Release → Create Version → Release for Review → approve it in the admin console",
+      "ws_step8": "After publishing, invite the bot to a Feishu group or add it as a direct contact to start chatting",
+      "ws_note": "WebSocket mode requires no public IP or callback URL. The connection is managed automatically."
+    },
+    "teams": {
+      "step1": "Go to portal.azure.com → Azure Active Directory → App registrations → New registration → enter name → select 'Accounts in this organizational directory only' (single-tenant) → Register",
+      "step2": "In the app overview page, copy the Application (client) ID and save it. Then go to Certificates & secrets → New client secret → add description and expiration → copy the Value (this is your App Secret). Also copy your Directory (tenant) ID from the Overview page.",
+      "step3": "For local testing: Start a localtunnel to expose your backend: `npx --yes localtunnel --port 8000` → copy the tunnel URL (e.g., https://xxxxx.loca.lt). When configuring the Messaging Endpoint URL in Azure Bot, replace 'localhost' with your localtunnel URL.",
+      "step4": "Paste App ID (Client ID), App Secret (Client Secret), and Tenant ID (Directory ID) above. Click Save Config → copy the Messaging Endpoint URL that appears.",
+      "step5": "In Azure Bot → Channels → Microsoft Teams → Configure → paste the Messaging Endpoint URL (use your localtunnel URL instead of localhost if testing locally) → Save → the bot will be available in Teams.",
+      "note": "Your server must be publicly accessible on the internet so Microsoft Teams can reach the Messaging Endpoint URL. For local testing, use localtunnel and replace 'localhost' with your tunnel URL.",
+      "tenantId": "Tenant ID (Directory ID)",
+      "tenantIdPlaceholder": "Enter your tenant ID (Directory ID) for this single-tenant app",
+      "tenantIdHint": "Required for single-tenant apps. Get it from Azure AD → App registrations → your app → Overview."
+    },
+    "dingtalk": {
+      "step1": "Go to open.dingtalk.com → log in → go to App Development → Create Internal App → enter a name",
+      "step2": "In the app page → Add Capabilities → find Bot → click Add",
+      "step3": "In the app info page → copy AppKey and AppSecret",
+      "step4": "Set message receiving mode to Stream (recommended, no public IP needed)",
+      "step5": "Paste AppKey and AppSecret above → click Save Config",
+      "step6": "Publish the app → find the bot in DingTalk and send a test message",
+      "note": "Stream mode requires no public IP or callback URL. Only AppKey and AppSecret are needed."
+    },
+    "wecom": {
+      "step1": "Log in to work.weixin.qq.com → App Management → Self-Built Apps → Create App",
+      "step2": "In the app details page → copy CorpID, AgentID, and Secret",
+      "step3": "Set up API message receiving → set Token and EncodingAESKey (can be auto-generated)",
+      "step4": "Fill in the info above → click Save Config → copy the Webhook URL that appears",
+      "step5": "Paste the Webhook URL into WeCom's API Receive Message URL field → Save",
+      "step6": "Find the app in WeCom and send a test message",
+      "note": "The callback URL must be publicly accessible. WeCom will verify the URL and send encrypted messages.",
+      "ws_step1": "Log in to work.weixin.qq.com → Security & Management → Management Tools → Intelligent Bots",
+      "ws_step2": "Click Create Bot → select Manual Creation → choose API Mode at the bottom",
+      "ws_step3": "Select 'Long Connection' as the connection method (not URL callback)",
+      "ws_step4": "Fill in bot name, avatar, and set visible scope → Save",
+      "ws_step5": "Copy the Bot ID and Secret that are generated → paste them above → click Save Config",
+      "ws_step6": "Find the bot in WeCom and send a test message",
+      "ws_note": "WebSocket mode requires no public IP, callback URL, or domain verification (ICP). The connection is managed automatically."
+    }
+  },
   "companySetup": {
     "title": "Set Up Your Company",
     "subtitle": "Join an existing company or create a new one",
@@ -1671,7 +1668,7 @@
   "admin": {
     "tab": {
       "dashboard": "Dashboard",
-      "platform": "️ Platform",
+      "platform": "Platform",
       "companies": "Companies"
     },
     "platformSettings": "Platform Settings",
@@ -1685,7 +1682,7 @@
     "tokens": "Token Usage",
     "createdAt": "Created",
     "status": "Status",
-    "action": "️ Action",
+    "action": "Action",
     "active": "Active",
     "disabled": "Disabled",
     "all": "All",
